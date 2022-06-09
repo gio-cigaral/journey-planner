@@ -7,6 +7,11 @@
 node_modules/
 dist/
 
+# ReScript artifact files
+/lib/
+.bsb.lock
+.merlin
+
 # Compiled Java class files
 *.class
 
