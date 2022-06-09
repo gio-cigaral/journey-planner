@@ -1,5 +1,5 @@
 {
-  "name": "rescript-project-template",
+  "name": "journey-planner",
   "version": "0.0.1",
   "scripts": {
     "build": "rescript",
@@ -12,6 +12,8 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "rescript": "*"
+    "@rescript/react": "^0.10.3",
+    "react": "^18.1.0",
+    "rescript": "^9.1.4"
   }
 }
