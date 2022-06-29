@@ -10,7 +10,7 @@
   },
   "package-specs": {
     "module": "commonjs",
-    "in-source": true
+    "in-source": false
   },
   "suffix": ".bs.js",
   "bs-dependencies": [
@@ -20,4 +20,3 @@
     "error" : "+101"
   }
 }
-// bs-json, bs-fetch
