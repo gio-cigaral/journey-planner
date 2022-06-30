@@ -13,8 +13,11 @@
     "in-source": false
   },
   "suffix": ".bs.js",
+  "namespace": true,
   "bs-dependencies": [
-    "@rescript/react"
+    "@rescript/react",
+    "bs-fetch",
+    "@glennsl/bs-json"
   ],
   "warnings": {
     "error" : "+101"
