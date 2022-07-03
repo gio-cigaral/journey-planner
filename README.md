@@ -1,6 +1,4 @@
-# ReScript Project Template
-
-The only official ReScript starter template.
+# Radiola Journey Planner
 
 ## Installation
 
@@ -10,20 +8,14 @@ npm install
 
 ## Build
 
-- Build: `npm run build`
 - Clean: `npm run clean`
-- Build & watch: `npm run start`
-
-## Run
-
-```sh
-node src/Demo.bs.js
-```
+- Build: `npm run build`
 
 ## Run Project
 
 ```sh
-npm install
+npm run clean
+npm run build
 npm start
 # in another tab
 npm run server
@@ -44,5 +36,3 @@ This will replace the development artifacts, compile the ReScript code as well a
 If you make use of routing (via `ReasonReact.Router` or similar logic) ensure
 that server-side routing handles your routes or that 404's are directed back to
 `index.html` (which is how the dev server is set up).
-
-## [source](https://github.com/opendevtools/supreme/tree/main/src/templates/rescript)
