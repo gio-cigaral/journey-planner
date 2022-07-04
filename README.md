@@ -14,8 +14,6 @@ npm install
 ## Run Project
 
 ```sh
-npm run clean
-npm run build
 npm start
 # in another tab
 npm run server
