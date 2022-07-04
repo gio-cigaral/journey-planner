@@ -5,18 +5,18 @@ let make = () => {
       <div id="search-bar" className="m-5 bg-blue-200 w-full h-10 flex">
         // ? would it be possible to reuse the searchbar component from Dynamis?
       </div>
-      <img className="absolute top-0 left-0" src="/img/DYNAMIS_ColourSignet.svg" alt="Man looking at item at a store" />
+      <img className="absolute top-0 left-0" src="/img/DYNAMIS_ColourSignet.svg" alt="Radiola Dynamis Icon" />
     </div>
 
     <div id="bottom-nav-bar" className="flex flex-row justify-evenly lg:ml-5 lg:max-w-xl rounded-t-xl bg-blue-900 h-20 lg:h-96">
-      <div id="icon-1">
-        <img src="/img/DYNAMIS_ColourSignet.svg" alt="Man looking at item at a store" />
+      <div id="icon-1" className="hover:border-2">
+        <img src="/img/DYNAMIS_ColourSignet.svg" alt="placeholder" />
       </div>
-      <div id="icon-2">
-        <img src="/img/DYNAMIS_ColourSignet.svg" alt="Man looking at item at a store" />
+      <div id="icon-2" className="hover:border-2">
+        <img src="/img/DYNAMIS_ColourSignet.svg" alt="placeholder" />
       </div>
-      <div id="icon-3">
-        <img  src="/img/DYNAMIS_ColourSignet.svg" alt="Man looking at item at a store" />
+      <div id="icon-3" className="hover:border-2">
+        <img  src="/img/DYNAMIS_ColourSignet.svg" alt="placeholder" />
       </div>
     </div>
   </div>

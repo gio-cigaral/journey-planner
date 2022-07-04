@@ -2,7 +2,11 @@
 module.exports = {
   content: ["./lib/es6/**/*.bs.js"],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        cerebri: ["Cerebri Sans", "sans-serif"],
+      }
+    },
   },
   variants: {
     extend: {},
