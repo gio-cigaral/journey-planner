@@ -2,7 +2,7 @@
 let make = () => {
   // TODO: use <form> and <input> for search text input
   <div id="search-container" className="flex m-2 relative">
-    <form className="flex m-5 w-full h-14 bg-radiola-light-grey rounded-lg shadow-lg lg:max-w-xl">
+    <form className="flex m-5 w-full h-14 rounded-lg bg-radiola-light-grey shadow-md lg:max-w-xl">
       <div id="search-bar" className="w-full">
         <input 
           type_="text"
