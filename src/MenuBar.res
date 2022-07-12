@@ -11,7 +11,9 @@ type state = {display : content}
 // * difficult to do since the listener would have to be on a parent element while the work needs to be completed in this one
 // ? possible solution is to have the card minimize when the 'focus' is off the entire MenuBar 
 // ? - problem with this is it will minimize for the SearchBar as well
-// * might need to be handled by a parent (App?) state
+// * might need to be handled by a parent (App?) state 
+// * - handle by parent context (see "showMenu"? in white-label DropMenu.res) - how will this element know when the context has changed?
+// * LoginForm.res onChange?
 let reducer = (state, action) => {
   switch action {
   | Tracker => 

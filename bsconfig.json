@@ -17,7 +17,8 @@
   "bs-dependencies": [
     "@rescript/react",
     "bs-fetch",
-    "@glennsl/bs-json"
+    "@glennsl/bs-json",
+    "rescript-react-mapbox-gl"
   ],
   "warnings": {
     "error" : "+101"
