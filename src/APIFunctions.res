@@ -4,3 +4,5 @@ let getBackendData = (url) => {
 }
 
 let getStops = (parameters) => getBackendData("/otp/routers/default/index/stops" ++ parameters)
+
+let getPlan = (parameters) => getBackendData("/otp/routers/default/plan?fromPlace=-37.68714862992901%2C176.16710186004642&toPlace=-37.68222404664231%2C176.1323404312134&time=2%3A56pm&date=07-20-2022&mode=TRANSIT%2CWALK&maxWalkDistance=4828.032&arriveBy=false&wheelchair=false&showIntermediateStops=true&debugItineraryFilter=false&locale=en" ++ parameters)

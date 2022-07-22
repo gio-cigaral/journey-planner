@@ -1,11 +1,15 @@
 @react.component
 let make = () => {
   let errorHandle = a => Js.log(a)
-  let callback = a => Js.log("Retrieved stops")
+  let callback = a => Js.log("Retrieved Data")
   let getStopData = () => Data.getStops(~callback, ~errorHandle)
+
+  let callbackPlan = a => Js.log(a)
+  let getPlanData = () => Data.getPlan(~callback=callbackPlan, ~errorHandle)
 
   React.useEffect0(() => {
     getStopData()
+    getPlanData()
     None
   })
 
