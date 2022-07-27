@@ -70,14 +70,14 @@ let make = () => {
 
     <div id="content" className=`${activeContent} bg-radiola-light-grey lg:block lg:h-[20.5rem]`>
       // TODO: create modules for each content type
-      /**
-        switch active {
-        | Tracker => ...
-        | Directions => ...
-        | Routes => ...
+      {
+        switch state.display {
+        | Tracker => React.null
+        | Directions => <DirectionsMenu />
+        | Routes => React.null
         | None => React.null
         }
-       */
+      }
     </div>
   </div>
 }
