@@ -48,7 +48,7 @@ let make = () => {
     }
   
   // TODO: adjust "footer" element height for large screens - starting height too low?
-  <div id="footer" className=`${activeFooter} lg:ml-7 lg:max-w-xl lg:h-96 shadow-md`>
+  <div id="footer" className=`${activeFooter} lg:ml-7 lg:h-96 shadow-md`>
     <ul id="nav-bar" className="flex flex-row justify-evenly w-full h-14 overflow-hidden rounded-t-xl bg-radiola-blue">
       // TODO: replace current "active" tab highglighting
       // TODO: only show label for large screens
