@@ -61,12 +61,12 @@ let make = (~images: array<image>, ~children) => {
   //   None
   // }, [data.viewState])
 
-  // let onMove = (evt) => {
-  //   evt
-  //   -> Mapbox.ViewStateChangeEvent.getViewState
-  //   -> Context.Action.SetViewState
-  //   -> dispatch
-  // }
+  let onMove = (evt) => {
+    evt
+    -> Mapbox.ViewStateChangeEvent.getViewState
+    -> Context.Action.SetViewState
+    -> dispatch
+  }
 
   // let onMoveEnd = (evt) => {
   //   evt
@@ -78,7 +78,7 @@ let make = (~images: array<image>, ~children) => {
   <Mapbox.Spread props=state.viewState>
     <Mapbox.Map
       ref={ReactDOM.Ref.domRef(ref)}
-      // onMove
+      onMove
       // onMoveEnd
       onLoad={_ => {
         loadImages(ref, images)
