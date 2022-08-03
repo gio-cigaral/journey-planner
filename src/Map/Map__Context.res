@@ -27,7 +27,15 @@ module Provider = {
 }
 
 // Set initial view state of Map to center over Tauranga
-let initialViewState: Mapbox.ViewState.t = Mapbox.ViewState.make(~latitude=-37.68708, ~longitude=176.16702, ~zoom=0, ~bearing=0.0, ~pitch=0.0, ())
+let initialViewState: Mapbox.ViewState.t = 
+  Mapbox.ViewState.make(
+    ~latitude=-37.68708, 
+    ~longitude=176.16702, 
+    ~zoom=0, 
+    ~bearing=0.0, 
+    ~pitch=0.0, 
+    ()
+  )
 
 let initialState: State.t = {
   viewState: initialViewState, //Mapbox.ViewState.make()

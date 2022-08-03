@@ -29,11 +29,9 @@ let loadImages = (map: React.ref<Js.Nullable.t<Dom.element>>, images: array<imag
 let make = (~images: array<image>, ~children) => {
   let ref = React.useRef(Js.Nullable.null)
   let (state, dispatch) = React.useContext(Context.context)
-  // ? why is the dispatch function for the DataContext an underscore?
   // let (data, _) = React.useContext(DataContext.context)
 
   // Update Map ref
-  // ? what is a ref, what is it used for, and why would it change?
   React.useEffect0(() => {
     Some(ref)
     -> Context.Action.SetMapRef
@@ -48,7 +46,6 @@ let make = (~images: array<image>, ~children) => {
     Some(cleanup)
   })
 
-  // ? what is the DebouncedViewState for?
   // React.useEffect1(() => {
   //   data.viewState
   //   -> Context.Action.SetViewState

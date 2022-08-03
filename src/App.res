@@ -7,6 +7,9 @@ let make = () => {
   let callbackPlan = a => Js.log(a)
   let getPlanData = () => Data.getPlan(~callback=callbackPlan, ~errorHandle)
 
+  // Testing PolyLineCodec bindings: "_p~iF~ps|U_ulLnnqC_mqNvxq`@"
+  Js.log(PolylineCodec.decode(~encodedPath="", ~precision=5, ()))
+
   React.useEffect0(() => {
     getStopData()
     getPlanData()
