@@ -8,7 +8,7 @@
 // }
 
 // ! array<float> TYPING IS WRONG => TYPING SHOULD BE array<array<float>> IT IS A 2D ARRAY (i.e. an array of coordinates)
-@module("@googlemaps/polyline-codec") external decode: (~encodedPath: string, ~precision: int=?, unit) => array<float> = "decode"
+@module("@googlemaps/polyline-codec") external decode: (~encodedPath: string, ~precision: int=?, unit) => array<array<float>> = "decode"
 
 // module Decode = {
 //   type t = array<float>

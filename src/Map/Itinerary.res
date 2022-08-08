@@ -7,6 +7,15 @@ let make = (
   let (_, mapDispatch) = React.useContext(Map.Context.context)
   let (shapes, setShapes) = React.useState(_ => [])
 
+  // attempt at converting coordinate array to Mapbox.position
+  let convertCoordinate = (~coord: array<float>) => {
+    let test: Mapbox.position = {
+      lat: coord[0],
+      lon: coord[1]
+    }
+    test
+  }
+
   let getItineraryShapes = () => {
     // TODO: decode all leg geometries
     // TODO: [1]
@@ -34,23 +43,26 @@ let make = (
       }
 
     let decodedPath = PolylineCodec.decode(~encodedPath, ~precision=5, ())
+    // let emptyPos: Mapbox.position = {
+    //   lat: 0.0,
+    //   lon: 0.0
+    // }
+    // let mapboxCoordinates = Belt.Array.make(Belt.Array.length(decodedPath), emptyPos)
 
     // Convert decoded path (array of coordinates) to type: Mapbox.position
-    decodedPath
-    ->Belt.Array.map(coord => {
+    // TODO: may need to copy converted obj to new array
+    // decodedPath
+    // ->Belt.Array.map(coord => {
+    //   // convertCoordinate(~coord)
+    //   Belt.Array.fill(mapboxCoordinates, ~offset, ~len, convertCoordinate(~coord))
+    // })
+
+    let mapboxCoordinates = Belt.Array.map(decodedPath, (coord) => {
       convertCoordinate(~coord)
     })
 
-    setShapes(_ => decodedPath)
+    setShapes(_ => mapboxCoordinates)
   }
-
-  // attempt at converting coordinate array to Mapbox.position
-  // let convertCoordinate = (~coord: array<float>) => {
-  //   let test: Mapbox.position = {
-  //     lat: coord[0],
-  //     lon: coord[1]
-  //   }
-  // }
 
   React.useEffect1(() => {
     getItineraryShapes()
@@ -58,17 +70,21 @@ let make = (
   }, [itinerary])
 
   let lineFeatures = 
-    shapes
-    ->Belt.Array.map(shape => {
-      Mapbox.Feature.makeLine(
-        ~geometry=Mapbox.Geometry.LineString.make(~positions=shape), // TODO: [1] convert return type of 'decode' to Mapbox.position
+    Mapbox.Feature.makeLine(
+        ~geometry=Mapbox.Geometry.LineString.make(~positions=shapes), // TODO: [1] convert return type of 'decode' to Mapbox.position
         ~properties=Mapbox.Feature.properties(~feature="itinerary", ()),
       )
-    })
+    // shapes
+    // ->Belt.Array.map(shape => {
+    //   Mapbox.Feature.makeLine(
+    //     ~geometry=Mapbox.Geometry.LineString.make(~positions=shape), // TODO: [1] convert return type of 'decode' to Mapbox.position
+    //     ~properties=Mapbox.Feature.properties(~feature="itinerary", ()),
+    //   )
+    // })
 
   <Mapbox.Source.GeoJSON
     id="selectedItinerary"
-    data={Mapbox.FeatureCollection.make(~features=lineFeatures)}
+    data={Mapbox.FeatureCollection.make(~features=[lineFeatures])}
   >
     <Mapbox.Layer.Line
       id="itineraryLine"
