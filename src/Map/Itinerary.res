@@ -14,13 +14,18 @@ let make = (
   let (_, mapDispatch) = React.useContext(Map.Context.context)
   let (lines, setLines) = React.useState(_ => [])
 
+  // React.useEffect0(() => {
+  //   Map.Context.Action.AddInteractiveLayerId("tripStops")->mapDispatch
+  //   None
+  // })
+
   // convert coordinate array to Mapbox.position
   let convertCoordinate = (~coord: array<float>) => {
-    let test: Mapbox.position = {
+    let pos: Mapbox.position = {
       lat: coord[0],
       lon: coord[1]
     }
-    test
+    pos
   }
 
   let getItineraryShapes = () => {    

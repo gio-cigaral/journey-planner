@@ -4,6 +4,8 @@ module Action = {
     | SetMapRef(option<React.ref<Js.Nullable.t<Dom.element>>>)
     | SetLoaded(bool)
     | SetDebouncedViewState(Mapbox.ViewState.t)
+    | AddInteractiveLayerId(string)
+    | RemoveInteractiveLayerId(string)
 }
 
 module State = {
@@ -11,7 +13,8 @@ module State = {
     viewState: Mapbox.ViewState.t,
     ref: option<React.ref<Js.Nullable.t<Dom.element>>>,
     loaded: bool,
-    debouncedViewState: Mapbox.ViewState.t
+    debouncedViewState: Mapbox.ViewState.t,
+    interactiveLayerIds: array<string>
   }
 }
 
@@ -41,7 +44,8 @@ let initialState: State.t = {
   viewState: initialViewState, //Mapbox.ViewState.make()
   ref: None,
   loaded: false,
-  debouncedViewState: Mapbox.ViewState.make()
+  debouncedViewState: Mapbox.ViewState.make(),
+  interactiveLayerIds: []
 }
 
 let context: React.Context.t<(State.t, Action.t => unit)> = React.createContext((
@@ -66,6 +70,18 @@ let reducer = (state: State.t, action) => {
   | Action.SetDebouncedViewState(debouncedViewState) => {
       ...state,
       debouncedViewState: debouncedViewState
+    }
+  | Action.AddInteractiveLayerId(interactiveLayerId) => 
+    Js.log("adding ID: " ++ interactiveLayerId)
+    {
+      ...state,
+      interactiveLayerIds: Belt.Array.concat(state.interactiveLayerIds, [interactiveLayerId])
+    }
+  | Action.RemoveInteractiveLayerId(interactiveLayerId) => 
+    Js.log("removing ID: " ++ interactiveLayerId)
+    {
+      ...state,
+      interactiveLayerIds: Belt.Array.keep(state.interactiveLayerIds, id => id != interactiveLayerId)
     }
   }
 }

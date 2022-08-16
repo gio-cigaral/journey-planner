@@ -6,6 +6,10 @@ let reducer = (state: State.t, action) => {
     ...state,
     selection: selection
   }
+  | Action.SetStops(stops) => {
+    ...state,
+    stops: Some(stops)
+  }
   | Action.SetPlan(plan) => {
     ...state,
     plan: plan,

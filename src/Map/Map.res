@@ -3,6 +3,18 @@ module Context = Map__Context
 let mapboxAccessToken = "pk.eyJ1IjoicmFkaW9sYSIsImEiOiJjbDVnN3VmZ3kxaW5xM2JtdHVhbzgzcW9qIn0.zeCuHBB9ObU6Rdyr6_Z5Vg"
 let mapStyle = "mapbox://styles/mapbox/streets-v9?optimize=true"
 
+let flyTo = (
+  map: React.ref<Js.Nullable.t<Dom.element>>,
+  lon: float,
+  lat: float,
+  zoom: Mapbox.zoom
+) => {
+  switch map.current->Js.Nullable.toOption {
+  | Some(x) => Mapbox.Map.flyTo(x, {"center": [lon, lat], "zoom": zoom})
+  | None => ()
+  }
+}
+
 type image = {
   name: string,
   url: string
@@ -17,7 +29,7 @@ let loadImages = (map: React.ref<Js.Nullable.t<Dom.element>>, images: array<imag
         x,
         image.url,
         image.name,
-        {() => Js.log("map-pin loaded")},
+        {() => Js.log(`${image.name} loaded`)},
         {() => Js.log("error")}
       )
     })
@@ -29,7 +41,7 @@ let loadImages = (map: React.ref<Js.Nullable.t<Dom.element>>, images: array<imag
 let make = (~images: array<image>, ~children) => {
   let ref = React.useRef(Js.Nullable.null)
   let (state, dispatch) = React.useContext(Context.context)
-  // let (data, _) = React.useContext(DataContext.context)
+  let (data, _) = React.useContext(DataContext.context)
 
   // Update Map ref
   React.useEffect0(() => {
@@ -46,17 +58,17 @@ let make = (~images: array<image>, ~children) => {
     Some(cleanup)
   })
 
-  // React.useEffect1(() => {
-  //   data.viewState
-  //   -> Context.Action.SetViewState
-  //   -> dispatch
+  React.useEffect1(() => {
+    data.viewState
+    -> Context.Action.SetViewState
+    -> dispatch
 
-  //   data.viewState
-  //   -> Context.Action.SetDebouncedViewState
-  //   -> dispatch
+    data.viewState
+    -> Context.Action.SetDebouncedViewState
+    -> dispatch
 
-  //   None
-  // }, [data.viewState])
+    None
+  }, [data. viewState])
 
   let onMove = (evt) => {
     evt
@@ -65,22 +77,40 @@ let make = (~images: array<image>, ~children) => {
     -> dispatch
   }
 
-  // let onMoveEnd = (evt) => {
-  //   evt
-  //   -> Mapbox.ViewStateChangeEvent.getViewState
-  //   -> Context.Action.SetDebouncedViewState
-  //   -> dispatch
-  // }
+  let onMoveEnd = (evt) => {
+    evt
+    -> Mapbox.ViewStateChangeEvent.getViewState
+    -> Context.Action.SetDebouncedViewState
+    -> dispatch
+  }
+
+  let onClick = (evt: Mapbox.MapLayerMouseEvent.t) => {
+    Js.log("user clicked")
+    switch evt.features {
+    | Some(features) => 
+        switch Belt.Array.get(features, 0) {
+        | Some(feature) =>
+            switch Mapbox.Feature.featureGet(feature.properties) {
+            | Some(id) => Js.log("clicked on feature: " ++ id)
+            | None => Js.log("clicked - but couldn't find property")
+            }
+        | None => Js.log("clicked - features.size = " ++ Belt.Int.toString(Belt.Array.length(features)))
+        }
+    | None => Js.log("clicked - no features")
+    }
+  }
 
   <Mapbox.Spread props=state.viewState>
     <Mapbox.Map
       ref={ReactDOM.Ref.domRef(ref)}
       onMove
-      // onMoveEnd
+      onMoveEnd
       onLoad={_ => {
         loadImages(ref, images)
         dispatch(Context.Action.SetLoaded(true))
       }}
+      interactiveLayerIds=state.interactiveLayerIds
+      onClick
       reuseMaps=true
       mapboxAccessToken
       mapStyle
@@ -99,7 +129,7 @@ let make = (~images: array<image>, ~children) => {
           (),
         )}
       />
-        children
+      children
     </Mapbox.Map>
   </Mapbox.Spread>
 }

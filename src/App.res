@@ -3,20 +3,12 @@ let make = () => {
   let (dataState, dataDispatch) = React.useContext(DataContext.context)
 
   // * START TESTING CODE
-  let errorHandle = a => Js.log(a)
-  let callback = a => Js.log("Retrieved Stops Data")
-  let getStopData = () => Data.getStops(~callback, ~errorHandle)
+  let errorHandler = a => Js.log(a)
+  let callback = a => dataDispatch(DataContext.Action.SetStops(a))
+  let getStopData = () => Data.getStops(~callback, ~errorHandler)
 
-  let callbackPlan = a => {
-    Js.log("Retrieved Plan Data")
-    Js.log(a)
-    dataDispatch(DataContext.Action.SetPlan([a]))
-  }
-  // let callbackPlan = a => Js.log(a)
-  let getPlanData = () => Data.getPlan(~callback=callbackPlan, ~errorHandle)
-
-  // Testing PolyLineCodec bindings: "_p~iF~ps|U_ulLnnqC_mqNvxq`@"
-  Js.log(PolylineCodec.decode(~encodedPath="_p~iF~ps|U_ulLnnqC_mqNvxq`@", ~precision=5, ()))
+  let callbackPlan = a => dataDispatch(DataContext.Action.SetPlan([a]))
+  let getPlanData = () => Data.getPlan(~callback=callbackPlan, ~errorHandler)
 
   React.useEffect0(() => {
     getPlanData()
@@ -33,11 +25,18 @@ let make = () => {
     <div className="z-0 h-full w-full absolute">
       <Map.Context>
         <Map images=[{name: "map-pin", url: "/img/person.png"}]>
-          // TODO: Create Route element
+          {
+            switch dataState.stops {
+            | Some(stops) => 
+                // let stop = Belt.Array.get(stops, 0)
+                <Stop stops=stops />
+            | None => React.null
+            }
+          }
           {
             switch dataState.itinerary {
-            | Some(itinerary) => <Itinerary itinerary=itinerary[dataState.route]> </Itinerary>
-            | None => <div> </div>
+            | Some(itinerary) => <Itinerary itinerary=itinerary[dataState.route] />
+            | None => React.null
             }
           }
         </Map>

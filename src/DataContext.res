@@ -8,7 +8,8 @@ type selection =
 module Action = {
   type t = 
     | SetSelection(selection)
-    | SetPlan(array<Common.TripPlannerResponse.t>)
+    | SetStops(array<Common.Stop.t>)
+    | SetPlan(array<Common.TripPlannerResponse.t>)  // TODO: change to option<> once connected to search bars
     | SetRoute(int)
     | SetViewState(Mapbox.ViewState.t)
 }
@@ -16,7 +17,8 @@ module Action = {
 module State = {
   type t = {
     selection: selection,
-    plan: array<Common.TripPlannerResponse.t>,
+    stops: option<array<Common.Stop.t>>,
+    plan: array<Common.TripPlannerResponse.t>,  // TODO: change to option<> once connected to search bars
     itinerary: option<array<Common.Itinerary.t>>,
     route: int,
     viewState: Mapbox.ViewState.t
@@ -25,7 +27,8 @@ module State = {
 
 let initialState: State.t = {
   selection: None,
-  plan: [],
+  stops: None,
+  plan: [], // TODO: change to option<> once connected to search bars
   itinerary: None,
   route: 1,
   viewState: Mapbox.ViewState.make()
