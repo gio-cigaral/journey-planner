@@ -1,13 +1,20 @@
-// Display a given itinerary on map
+@deriving(abstract)
+type routeLine = {
+  id: int,
+  shape: array<Mapbox.position>,
+  color: string
+}
+
+// Display a single itinerary on map
 @react.component
 let make = (
-  ~itinerary: Common.TripPlannerResponse.itinerary
+  ~itinerary: Common.Itinerary.t
 ) => {
-  // let (dataState, _) = React.useContext(DataContext.context)
+  let (dataState, _) = React.useContext(DataContext.context)
   let (_, mapDispatch) = React.useContext(Map.Context.context)
-  let (shapes, setShapes) = React.useState(_ => [])
+  let (lines, setLines) = React.useState(_ => [])
 
-  // attempt at converting coordinate array to Mapbox.position
+  // convert coordinate array to Mapbox.position
   let convertCoordinate = (~coord: array<float>) => {
     let test: Mapbox.position = {
       lat: coord[0],
@@ -16,52 +23,50 @@ let make = (
     test
   }
 
-  let getItineraryShapes = () => {
-    // TODO: decode all leg geometries
-    // TODO: [1]
-    // Note: legs, legGeometry, points are all optional fields
-    // ? how to access an optional property?
-    // itinerary.legs[x].legGeometry.points
-
-    // * To test just try to draw only the first leg
-    // let path = itinerary.legs[0].legGeometry.points
-
+  let getItineraryShapes = () => {    
     let encodedPath = 
       switch itinerary.legs {
-      | Some(l) => {
-        switch l[0].legGeometry {
-        | Some(lg) => {
-          switch lg.points {
-          | Some(p) => p
+      | Some(leg) => {
+        Belt.Array.map(leg, (l) => {
+          switch l.legGeometry {
+          | Some(lg) => {
+            switch lg.points {
+            | Some(p) => p
+            | _ => ""
+            }
+          
+          }
           | _ => ""
           }
-        }
-        | _ => ""
-        } 
+        }) 
       }
-      | _ => ""
+      | _ => [""]
       }
 
-    let decodedPath = PolylineCodec.decode(~encodedPath, ~precision=5, ())
-    // let emptyPos: Mapbox.position = {
-    //   lat: 0.0,
-    //   lon: 0.0
-    // }
-    // let mapboxCoordinates = Belt.Array.make(Belt.Array.length(decodedPath), emptyPos)
-
-    // Convert decoded path (array of coordinates) to type: Mapbox.position
-    // TODO: may need to copy converted obj to new array
-    // decodedPath
-    // ->Belt.Array.map(coord => {
-    //   // convertCoordinate(~coord)
-    //   Belt.Array.fill(mapboxCoordinates, ~offset, ~len, convertCoordinate(~coord))
-    // })
-
-    let mapboxCoordinates = Belt.Array.map(decodedPath, (coord) => {
-      convertCoordinate(~coord)
+    let decodedPath = Belt.Array.map(encodedPath, (path) => {
+      PolylineCodec.decode(~encodedPath=path, ~precision=5, ())
     })
 
-    setShapes(_ => mapboxCoordinates)
+    let mapboxCoordinates = Belt.Array.mapWithIndex(decodedPath, (index, path) => {
+      let shape = Belt.Array.map(path, (coord) => {
+        convertCoordinate(~coord)
+      })
+      
+      let color = 
+        switch itinerary.legs {
+        | Some(leg) => { 
+          switch leg[index].routeColor {
+          | Some(color) => "#" ++ color
+          | _ => "black"
+          }
+        }
+        | _ => "black"
+        }
+
+      routeLine(~id=index, ~shape, ~color)
+    })
+
+    setLines(_ => mapboxCoordinates)
   }
 
   React.useEffect1(() => {
@@ -70,26 +75,32 @@ let make = (
   }, [itinerary])
 
   let lineFeatures = 
-    Mapbox.Feature.makeLine(
-        ~geometry=Mapbox.Geometry.LineString.make(~positions=shapes), // TODO: [1] convert return type of 'decode' to Mapbox.position
-        ~properties=Mapbox.Feature.properties(~feature="itinerary", ()),
+    lines
+    ->Belt.Array.mapWithIndex((index, line) => {
+      Mapbox.Feature.makeLine(
+        ~geometry=Mapbox.Geometry.LineString.make(~positions=shapeGet(line)),
+        ~properties=Mapbox.Feature.properties(~feature=`itinerary-${Belt.Int.toString(index)}`, ()),
       )
-    // shapes
-    // ->Belt.Array.map(shape => {
-    //   Mapbox.Feature.makeLine(
-    //     ~geometry=Mapbox.Geometry.LineString.make(~positions=shape), // TODO: [1] convert return type of 'decode' to Mapbox.position
-    //     ~properties=Mapbox.Feature.properties(~feature="itinerary", ()),
-    //   )
-    // })
+    })
+
+  // ? May need to modify <id> and <filter> tags to also specify which Itinerary the line belongs to
+  // ? e.g. `itineraryLine${Belt.Int.toString(dataState.route)}-${Belt.Int.toString(index)}`
+  let lineElements = 
+    lines
+    ->Belt.Array.mapWithIndex((index, line) => {
+      <Mapbox.Layer.Line
+        id=`itineraryLine-${Belt.Int.toString(index)}`
+        paint={Mapbox.Layer.Line.paint(~lineWidth=5, ~lineOpacity=0.7, ~lineColor=colorGet(line), ())}
+        filter=Any([Mapbox.Any("=="), Any(["get", "feature"]), Any(`itinerary-${Belt.Int.toString(index)}`)])
+      />
+    })
 
   <Mapbox.Source.GeoJSON
     id="selectedItinerary"
-    data={Mapbox.FeatureCollection.make(~features=[lineFeatures])}
+    data={Mapbox.FeatureCollection.make(~features=lineFeatures)}
   >
-    <Mapbox.Layer.Line
-      id="itineraryLine"
-      paint={Mapbox.Layer.Line.paint(~lineWidth=5, ~lineOpacity=0.7, ())}
-      filter=Any([Mapbox.Any("=="), Any(["get", "feature"]), Any("itinerary")])
-    />
+    {
+      React.array(lineElements)
+    }
   </Mapbox.Source.GeoJSON>
 }
