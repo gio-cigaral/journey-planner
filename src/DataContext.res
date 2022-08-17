@@ -3,11 +3,11 @@ type selection =
   | Tracker
   | Directions
   | Routes
-  | None
+  | Empty
 
 module Action = {
   type t = 
-    | SetSelection(selection)
+    | SetSelection(string)
     | SetStops(array<Common.Stop.t>)
     | SetPlan(array<Common.TripPlannerResponse.t>)  // TODO: change to option<> once connected to search bars
     | SetRoute(int)
@@ -26,7 +26,7 @@ module State = {
 }
 
 let initialState: State.t = {
-  selection: None,
+  selection: Empty,
   stops: None,
   plan: [], // TODO: change to option<> once connected to search bars
   itinerary: None,

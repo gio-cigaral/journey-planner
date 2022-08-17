@@ -4,7 +4,22 @@ let reducer = (state: State.t, action) => {
   switch action {
   | Action.SetSelection(selection) => {
     ...state,
-    selection: selection
+    selection: {
+      switch selection {
+      | "tracker" => 
+        Js.log("displaying tracker")
+        Tracker
+      | "directions" => 
+        Js.log("displaying directions")
+        Directions
+      | "routes" => 
+        Js.log("displaying routes")
+        Routes
+      | _ => 
+        Js.log("displaying empty")
+        Empty
+      }
+    }
   }
   | Action.SetStops(stops) => {
     ...state,

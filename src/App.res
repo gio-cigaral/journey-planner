@@ -2,7 +2,6 @@
 let make = () => {
   let (dataState, dataDispatch) = React.useContext(DataContext.context)
 
-  // * START TESTING CODE
   let errorHandler = a => Js.log(a)
   let callback = a => dataDispatch(DataContext.Action.SetStops(a))
   let getStopData = () => Data.getStops(~callback, ~errorHandler)
@@ -15,7 +14,6 @@ let make = () => {
     getStopData()
     None
   })
-  // * END TESTING CODE
 
   <div className="flex flex-col justify-between h-screen">
     <div className="z-10 lg:max-w-xl">
@@ -28,7 +26,6 @@ let make = () => {
           {
             switch dataState.stops {
             | Some(stops) => 
-                // let stop = Belt.Array.get(stops, 0)
                 <Stop stops=stops />
             | None => React.null
             }
