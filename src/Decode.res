@@ -13,7 +13,7 @@ module Stop = {
 
 // TODO: consider renaming
 module Plan = {
-  let placeInfo = (json): Common.TripPlannerResponse.place => {
+  let placeInfo = (json): Common.Place.t => {
     open Json.Decode
     {
       name: json |> field("name", Json.Decode.string),
@@ -28,7 +28,7 @@ module Plan = {
     }
   }
 
-  let encodedPolylineBeanInfo = (json): Common.TripPlannerResponse.encodedPolylineBean => {
+  let encodedPolylineBeanInfo = (json): Common.EncodedPolylineBean.t => {
     open Json.Decode
     {
       points: json |> optional(field("points", Json.Decode.string)),
@@ -36,7 +36,7 @@ module Plan = {
     }
   }
 
-  let legInfo = (json): Common.TripPlannerResponse.leg => {
+  let legInfo = (json): Common.Leg.t => {
     open Json.Decode
     {
       startTime: json |> optional(field("startTime", Json.Decode.int)),
@@ -65,7 +65,7 @@ module Plan = {
     }
   }
 
-  let itineraryInfo = (json): Common.TripPlannerResponse.itinerary => {
+  let itineraryInfo = (json): Common.Itinerary.t => {
     open Json.Decode
     {
       duration: json |> optional(field("duration", Json.Decode.int)),

@@ -1,32 +1,46 @@
 @react.component
 let make = () => {
-  let errorHandle = a => Js.log(a)
-  let callback = a => Js.log("Retrieved Data")
-  let getStopData = () => Data.getStops(~callback, ~errorHandle)
+  let (dataState, dataDispatch) = React.useContext(DataContext.context)
 
-  let callbackPlan = a => Js.log(a)
-  let getPlanData = () => Data.getPlan(~callback=callbackPlan, ~errorHandle)
+  let errorHandler = a => Js.log(a)
+  let callback = a => dataDispatch(DataContext.Action.SetStops(a))
+  let getStopData = () => Data.getStops(~callback, ~errorHandler)
+
+  let callbackPlan = a => dataDispatch(DataContext.Action.SetPlan([a]))
+  let getPlanData = () => Data.getPlan(~callback=callbackPlan, ~errorHandler)
 
   React.useEffect0(() => {
-    getStopData()
     getPlanData()
+    getStopData()
     None
   })
 
   <div className="flex flex-col justify-between h-screen">
-    <div className="z-10 lg:max-w-xl">
+    <div className="z-10 xl:max-w-lg lg:max-w-sm">
       <SearchBar />
     </div>
 
     <div className="z-0 h-full w-full absolute">
       <Map.Context>
         <Map images=[{name: "map-pin", url: "/img/person.png"}]>
-          <div> </div>
+          {
+            switch dataState.stops {
+            | Some(stops) => 
+                <Stop stops=stops />
+            | None => React.null
+            }
+          }
+          {
+            switch dataState.itinerary {
+            | Some(itinerary) => <Itinerary itinerary=itinerary[dataState.route] />
+            | None => React.null
+            }
+          }
         </Map>
       </Map.Context>
     </div>
 
-    <div className="z-10 lg:max-w-xl">
+    <div className="z-10 xl:max-w-lg lg:max-w-sm">
       <MenuBar />
     </div>
   </div>

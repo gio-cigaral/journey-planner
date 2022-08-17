@@ -1,11 +1,11 @@
-let genericDataRetrieval = (~parameters="", ~callback, ~errorHandle, ~apiFunction, ~decoder, ()) => {
+let genericDataRetrieval = (~parameters="", ~callback, ~errorHandler, ~apiFunction, ~decoder, ()) => {
   open Js.Promise
   apiFunction(parameters)
   |> then_(Fetch.Response.json)
   |> then_(json => decoder(json)->resolve)
   |> then_(data => callback(data) |> resolve)
   |> catch(_err => {
-    errorHandle(_err)
+    errorHandler(_err)
     resolve()
   })
   |> ignore
@@ -13,7 +13,7 @@ let genericDataRetrieval = (~parameters="", ~callback, ~errorHandle, ~apiFunctio
 
 exception MyException(string)
 
-let multiDataRetrieval = (~parameterList=[], ~callback, ~errorHandle, ~apiFunction, ~decoder, ()) => {
+let multiDataRetrieval = (~parameterList=[], ~callback, ~errorHandler, ~apiFunction, ~decoder, ()) => {
   parameterList
   -> Belt.Array.map(parameters => {
     apiFunction(parameters)
@@ -26,24 +26,24 @@ let multiDataRetrieval = (~parameterList=[], ~callback, ~errorHandle, ~apiFuncti
   -> Js.Promise.all
   |> Js.Promise.then_(results => callback(results) |> Js.Promise.resolve)
   |> Js.Promise.catch(_err => {
-    errorHandle(_err)
+    errorHandler(_err)
     Js.Promise.resolve()
   })
   |> ignore
 }
 
-let getStops = (~callback, ~errorHandle) =>
+let getStops = (~callback, ~errorHandler) =>
   genericDataRetrieval(
     ~apiFunction=APIFunctions.getStops,
     ~decoder=Decode.toStops,
     ~callback,
-    ~errorHandle, ()
+    ~errorHandler, ()
   )
 
-let getPlan = (~callback, ~errorHandle) =>
+let getPlan = (~callback, ~errorHandler) =>
   genericDataRetrieval(
     ~apiFunction=APIFunctions.getPlan,
     ~decoder=Decode.toPlan,
     ~callback,
-    ~errorHandle, ()
+    ~errorHandler, ()
   )

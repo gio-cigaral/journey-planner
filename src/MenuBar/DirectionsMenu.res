@@ -2,7 +2,7 @@
 let make = () => {
   // <p>{React.string("Directions Menu")}</p>
   <div id="directions-container" className="h-full w-full p-5">
-    <form className="flex flex-col justify-evenly h-4/5 bg-radiola-light-grey lg:max-w-xl">
+    <form className="flex flex-col justify-evenly h-4/5 bg-radiola-light-grey">
       <div id="search-bar" className="w-full h-12 border-2 border-gray-300 rounded-lg">
         <input 
           type_="text"

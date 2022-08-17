@@ -9,9 +9,8 @@ module Stop = {
   }
 }
 
-// * ref http://dev.opentripplanner.org/apidoc/2.0.0/json_TripPlannerResponse.html
-module TripPlannerResponse = {
-  type place = {
+module Place = {
+  type t = {
     name: string,
     lat: float,
     lon: float,
@@ -22,19 +21,25 @@ module TripPlannerResponse = {
     stopIndex: option<int>,
     stopSequence: option<int>
   }
+}
 
-  type encodedPolylineBean = {
+module EncodedPolylineBean = {
+  type t = {
     points: option<string>,
     length: int
   }
+}
 
-  // type walkStep = {
+// module WalkStep = {
+//   type t = {
 
-  // }
+//   }
+// }
 
+module Leg = {
   // TODO: Implement steps: ApiWalkStep
   // http://dev.opentripplanner.org/apidoc/2.0.0/json_ApiWalkStep.html
-  type leg = {
+  type t = {
     startTime: option<int>,
     endTime: option<int>,
     distance: option<float>,
@@ -50,17 +55,20 @@ module TripPlannerResponse = {
     routeId: option<string>,
     agencyId: option<string>,
     serviceDate: option<string>,
-    from: option<place>,
-    to: option<place>,
-    intermediateStops: option<place>,
-    legGeometry: option<encodedPolylineBean>,
+    from: option<Place.t>,
+    to: option<Place.t>,
+    intermediateStops: option<Place.t>,
+    legGeometry: option<EncodedPolylineBean.t>,
     // steps: option<array<walkStep>>,
     routeShortName: option<string>,
     routeLongName: option<string>,
     duration: float
   }
 
-  type itinerary = {
+}
+
+module Itinerary = {
+  type t = {
     duration: option<int>,
     startTime: option<int>,
     endTime: option<int>,
@@ -69,14 +77,17 @@ module TripPlannerResponse = {
     waitingTime: int,
     walkDistance: option<float>,
     transfers: option<int>,
-    legs: option<array<leg>>
+    legs: option<array<Leg.t>>
   }
+}
 
+// * ref http://dev.opentripplanner.org/apidoc/2.0.0/json_TripPlannerResponse.html
+module TripPlannerResponse = {
   type plan = {
     date: int,
-    from: place,
-    to: place,
-    itineraries: array<itinerary>
+    from: Place.t,
+    to: Place.t,
+    itineraries: array<Itinerary.t>
   }
 
   // ? Possibly change 'message' type into custom type to allow for pattern matching
