@@ -6,7 +6,7 @@ let make = () => {
       <div id="search-bar" className="w-full">
         <input 
           type_="text"
-          className="w-full h-full pl-12 pr-12 bg-inherit placeholder:italic" 
+          className="w-full h-full pl-12 pr-12 bg-inherit" 
           placeholder="Enter stop ID or address"
         />
       </div>
