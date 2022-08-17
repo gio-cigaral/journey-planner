@@ -16,7 +16,7 @@ let make = () => {
   })
 
   <div className="flex flex-col justify-between h-screen">
-    <div className="z-10 lg:max-w-xl">
+    <div className="z-10 xl:max-w-lg lg:max-w-sm">
       <SearchBar />
     </div>
 
@@ -40,7 +40,7 @@ let make = () => {
       </Map.Context>
     </div>
 
-    <div className="z-10 lg:max-w-xl">
+    <div className="z-10 xl:max-w-lg lg:max-w-sm">
       <MenuBar />
     </div>
   </div>

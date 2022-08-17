@@ -86,7 +86,9 @@ let make = (~images: array<image>, ~children) => {
 
   let onClick = (evt: Mapbox.MapLayerMouseEvent.t) => {
     // Minimise menubar for mobile devices
-    dataDispatch(DataContext.Action.SetSelection(""))
+    if (APIFunctions.getInnerWidth() < 1024) {
+      dataDispatch(DataContext.Action.SetSelection(""))
+    }
 
     Js.log("user clicked")
     switch evt.features {

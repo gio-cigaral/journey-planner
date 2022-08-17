@@ -2,12 +2,14 @@
 let make = () => {
   let (dataState, dataDispatch) = React.useContext(DataContext.context)
 
+  // Styling for mobile
   let activeFooter = 
     switch dataState.selection {
     | Empty => "h-14"
     | _ => "h-96"
     }
 
+  // Styling for mobile
   let activeContent = 
     switch dataState.selection {
     | Empty => "hidden"
