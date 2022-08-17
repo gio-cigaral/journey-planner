@@ -41,7 +41,7 @@ let loadImages = (map: React.ref<Js.Nullable.t<Dom.element>>, images: array<imag
 let make = (~images: array<image>, ~children) => {
   let ref = React.useRef(Js.Nullable.null)
   let (state, dispatch) = React.useContext(Context.context)
-  let (data, _) = React.useContext(DataContext.context)
+  let (dataState, dataDispatch) = React.useContext(DataContext.context)
 
   // Update Map ref
   React.useEffect0(() => {
@@ -59,16 +59,16 @@ let make = (~images: array<image>, ~children) => {
   })
 
   React.useEffect1(() => {
-    data.viewState
+    dataState.viewState
     -> Context.Action.SetViewState
     -> dispatch
 
-    data.viewState
+    dataState.viewState
     -> Context.Action.SetDebouncedViewState
     -> dispatch
 
     None
-  }, [data. viewState])
+  }, [dataState. viewState])
 
   let onMove = (evt) => {
     evt
@@ -85,6 +85,9 @@ let make = (~images: array<image>, ~children) => {
   }
 
   let onClick = (evt: Mapbox.MapLayerMouseEvent.t) => {
+    // Minimise menubar for mobile devices
+    dataDispatch(DataContext.Action.SetSelection(""))
+
     Js.log("user clicked")
     switch evt.features {
     | Some(features) => 
