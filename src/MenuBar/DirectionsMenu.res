@@ -1,33 +1,7 @@
-type state = {
-  origin: string,
-  destination: string
-}
-
-type action = 
-  | SetOrigin(string)
-  | SetDestination(string)
-
-let reducer = (state: state, action) => {
-  switch action {
-  | SetOrigin(origin) => {
-      ...state,
-      origin: origin
-    }
-  | SetDestination(destination) => {
-      ...state,
-      destination: destination
-    }
-  }
-}
-
-let initialState: state = {
-  origin: "",
-  destination: ""
-}
-
 @react.component
 let make = () => {
-  let (state, dispatch) = React.useReducer(reducer, initialState)
+  // let (state, dispatch) = React.useReducer(reducer, initialState)
+  let (state, dispatch) = React.useContext(DirectionsMenuContext.context)
   let (_, dataDispatch) = React.useContext(DataContext.context)
 
   let handleClick = (evt: ReactEvent.Mouse.t) => {

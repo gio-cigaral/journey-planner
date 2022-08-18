@@ -42,7 +42,7 @@ let make = () => {
       {
         switch dataState.selection {
         | Tracker => React.null
-        | Directions => <DirectionsMenu />
+        | Directions => <DirectionsMenuContext> <DirectionsMenu /> </DirectionsMenuContext>
         | Routes => React.null
         | Empty => React.null
         }
