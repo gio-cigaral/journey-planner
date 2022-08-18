@@ -107,3 +107,16 @@ module TripPlannerResponse = {
     error: option<error>
   }
 }
+
+module GeocodeResponse = {
+  type feature = {
+    id: string,
+    relevance: float,
+    placeName: string,
+    center: array<float>
+  }
+
+  type t = {
+    features: array<feature>
+  }
+}

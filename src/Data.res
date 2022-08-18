@@ -47,3 +47,12 @@ let getPlan = (~callback, ~errorHandler) =>
     ~callback,
     ~errorHandler, ()
   )
+
+let getCoordinates = (~parameters, ~callback, ~errorHandler) =>
+  genericDataRetrieval(
+    ~parameters,
+    ~apiFunction=APIFunctions.getCoordinates,
+    ~decoder=Decode.toGeocode,
+    ~callback,
+    ~errorHandler
+  )

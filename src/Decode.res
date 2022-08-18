@@ -112,5 +112,25 @@ module Plan = {
   }
 }
 
+module Geocode = {
+  let featureInfo = (json): Common.GeocodeResponse.feature => {
+    open Json.Decode
+    {
+      id: json |> field("id", Json.Decode.string),
+      relevance: json |> field("relevance", Json.Decode.float),
+      placeName: json |> field("place_name", Json.Decode.string),
+      center: json |> field("center", Json.Decode.array(Json.Decode.float))
+    }
+  }
+
+  let decode = (json): Common.GeocodeResponse.t => {
+    open Json.Decode
+    {
+      features: json |> field("features", Json.Decode.array(featureInfo))
+    }
+  }
+} 
+
 let toStops = Json.Decode.array(Stop.decode)
 let toPlan = Plan.decode
+let toGeocode = Geocode.decode
