@@ -1,3 +1,8 @@
+type autocomplete = 
+  | Origin
+  | Destination
+  | None
+
 module State = {
   type t = {
     origin: string,
@@ -32,7 +37,10 @@ let reducer = (state: State.t, action) => {
       ...state,
       origin: origin
     }
-  | Action.SetOriginPosition(originPosition) => {
+  | Action.SetOriginPosition(originPosition) => 
+    Js.log(originPosition.placeName)
+    Js.log(originPosition.center)
+    {
       ...state,
       originPosition: Some(originPosition)
     }
@@ -40,7 +48,10 @@ let reducer = (state: State.t, action) => {
       ...state,
       destination: destination
     }
-  | Action.SetDestinationPosition(destinationPosition) => {
+  | Action.SetDestinationPosition(destinationPosition) => 
+    Js.log(destinationPosition.placeName)
+    Js.log(destinationPosition.center)
+    {
       ...state,
       destinationPosition: Some(destinationPosition)
     }

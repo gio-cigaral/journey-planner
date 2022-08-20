@@ -54,5 +54,5 @@ let getCoordinates = (~parameters, ~callback, ~errorHandler) =>
     ~apiFunction=APIFunctions.getCoordinates,
     ~decoder=Decode.toGeocode,
     ~callback,
-    ~errorHandler
+    ~errorHandler, ()
   )

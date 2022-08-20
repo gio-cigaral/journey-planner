@@ -6,11 +6,7 @@ let make = () => {
   let callback = a => dataDispatch(DataContext.Action.SetStops(a))
   let getStopData = () => Data.getStops(~callback, ~errorHandler)
 
-  let callbackPlan = a => dataDispatch(DataContext.Action.SetPlan([a]))
-  let getPlanData = () => Data.getPlan(~callback=callbackPlan, ~errorHandler)
-
   React.useEffect0(() => {
-    getPlanData()
     getStopData()
     None
   })

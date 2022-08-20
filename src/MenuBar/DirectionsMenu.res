@@ -4,32 +4,41 @@ let make = () => {
   let (state, dispatch) = React.useContext(DirectionsMenuContext.context)
   let (_, dataDispatch) = React.useContext(DataContext.context)
 
-  // * TESTING
-  // triton%20hearing%20tauranga.json?  -> ${Js.Global.encodeURI(state.origin)}?
-  // country=nz
-  // &proximity=ip
-  // &types=place%2Cpostcode%2Caddress%2Cpoi
-  // &access_token=pk.eyJ1IjoicmFkaW9sYSIsImEiOiJjbDVnN3VmZ3kxaW5xM2JtdHVhbzgzcW9qIn0.zeCuHBB9ObU6Rdyr6_Z5Vg  -> &access_token=${Map.mapboxAccessToken}
-  let search = `${state.origin}.json?country=nz&proximity=ip&types=place,postcode,address,poi&access_token=${Map.mapboxAccessToken}`
-  let parameters = Js.Global.encodeURI(search)
+  let getParameters = (~location: string) => {
+    let search = `${location}.json?country=nz&proximity=ip&types=place,postcode,address,poi&access_token=${Map.mapboxAccessToken}`
+    Js.Global.encodeURI(search)
+  }
+
+  // * Geocode upon submit - auto accept closest possible match
+  let originCallback = (a: Common.GeocodeResponse.t) => dispatch(SetOriginPosition(a.features[0]))
+  let destinationCallback = (a: Common.GeocodeResponse.t) => dispatch(SetDestinationPosition(a.features[0]))
+
   let errorHandler = a => Js.log(a)
-  let callback = a => Js.log(a)
-  let test = () => Data.getCoordinates(~parameters, ~callback, ~errorHandler)
+
+  let getCoordinates = (~parameters, ~callback) => Data.getCoordinates(~parameters, ~callback, ~errorHandler)
+
+  let callbackPlan = a => dataDispatch(DataContext.Action.SetPlan([a]))
+  let getPlanData = () => Data.getPlan(~callback=callbackPlan, ~errorHandler)
 
   let handleClick = (evt: ReactEvent.Mouse.t) => {
     Js.log(state.origin)
     Js.log(state.destination)
 
-    // * TESTING
-    Js.log("hello")
-    let h = test()
-    h()
-    ()
+    getCoordinates(~parameters=getParameters(~location=state.origin), ~callback=originCallback)
+    getCoordinates(~parameters=getParameters(~location=state.destination), ~callback=destinationCallback)
   }
+
+  React.useEffect2(() => {
+    if (Js.Option.isSome(state.originPosition) && Js.Option.isSome(state.destinationPosition)) {
+      Js.log("test")
+      getPlanData()
+    }
+    None
+  }, (state.originPosition, state.destinationPosition))
 
   <div id="directions-container" className="h-full w-full p-5">
     <form className="flex flex-col justify-evenly h-4/5 bg-radiola-light-grey">
-      <div id="origin-input-bar" className="w-full h-12 border-2 border-gray-300 rounded-lg">
+      <div id="origin-input-bar" className="relative w-full h-12 border-2 border-gray-300 rounded-lg">
         <input 
           type_="text"
           className="w-full h-full pl-12 pr-12 bg-inherit" 
@@ -39,6 +48,9 @@ let make = () => {
             dispatch(SetOrigin((evt->ReactEvent.Form.target)["value"]))
           }
         />
+        // <div id="autocomplete-items" className="absolute z-50 top-full left-0 right-0 border-2 border-b-0 border-t-0 border-gray-300">
+        //   <div id="item" className="p-3 cursor-pointer bg-red-500 border-b-2 border-black"> </div>
+        // </div>
       </div>
 
       <div id="destination-input-bar" className="w-full h-12 border-2 border-gray-300 rounded-lg">
