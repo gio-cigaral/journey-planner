@@ -25,7 +25,9 @@ let reducer = (state: State.t, action) => {
     ...state,
     stops: Some(stops)
   }
-  | Action.SetPlan(plan) => {
+  | Action.SetPlan(plan) => 
+  Js.log(plan)
+  {
     ...state,
     plan: plan,
     itinerary: Some(plan[0].plan.itineraries)

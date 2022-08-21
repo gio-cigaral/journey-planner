@@ -42,6 +42,7 @@ let getStops = (~callback, ~errorHandler) =>
 
 let getPlan = (~callback, ~errorHandler) =>
   genericDataRetrieval(
+    // ~parameters,
     ~apiFunction=APIFunctions.getPlan,
     ~decoder=Decode.toPlan,
     ~callback,

@@ -1,6 +1,5 @@
 @react.component
 let make = () => {
-  // let (state, dispatch) = React.useReducer(reducer, initialState)
   let (state, dispatch) = React.useContext(DirectionsMenuContext.context)
   let (_, dataDispatch) = React.useContext(DataContext.context)
 
@@ -13,24 +12,27 @@ let make = () => {
   let originCallback = (a: Common.GeocodeResponse.t) => dispatch(SetOriginPosition(a.features[0]))
   let destinationCallback = (a: Common.GeocodeResponse.t) => dispatch(SetDestinationPosition(a.features[0]))
 
-  let errorHandler = a => Js.log(a)
+  let coordinatesErrorHandler = a => Js.log(a)
+  let planErrorHandler = a => Js.log(a)
 
-  let getCoordinates = (~parameters, ~callback) => Data.getCoordinates(~parameters, ~callback, ~errorHandler)
+  let getCoordinates = (~parameters, ~callback) => Data.getCoordinates(~parameters, ~callback, ~errorHandler=coordinatesErrorHandler)
 
   let callbackPlan = a => dataDispatch(DataContext.Action.SetPlan([a]))
-  let getPlanData = () => Data.getPlan(~callback=callbackPlan, ~errorHandler)
+  let getPlanData = () => Data.getPlan(~callback=callbackPlan, ~errorHandler=planErrorHandler)
 
   let handleClick = (evt: ReactEvent.Mouse.t) => {
-    Js.log(state.origin)
-    Js.log(state.destination)
+    let originParameters = getParameters(~location=state.origin)
+    let destinationParameters = getParameters(~location=state.destination)
 
-    getCoordinates(~parameters=getParameters(~location=state.origin), ~callback=originCallback)
-    getCoordinates(~parameters=getParameters(~location=state.destination), ~callback=destinationCallback)
+    getCoordinates(~parameters=originParameters, ~callback=originCallback)
+    getCoordinates(~parameters=destinationParameters, ~callback=destinationCallback)
   }
 
   React.useEffect2(() => {
     if (Js.Option.isSome(state.originPosition) && Js.Option.isSome(state.destinationPosition)) {
       Js.log("test")
+      Js.log(Util.getCurrentDate())
+      Js.log(Util.getCurrentTime())
       getPlanData()
     }
     None
@@ -48,6 +50,7 @@ let make = () => {
             dispatch(SetOrigin((evt->ReactEvent.Form.target)["value"]))
           }
         />
+        // TODO: autocomplete div
         // <div id="autocomplete-items" className="absolute z-50 top-full left-0 right-0 border-2 border-b-0 border-t-0 border-gray-300">
         //   <div id="item" className="p-3 cursor-pointer bg-red-500 border-b-2 border-black"> </div>
         // </div>
