@@ -3,11 +3,6 @@ let make = () => {
   let (state, dispatch) = React.useContext(DirectionsMenuContext.context)
   let (_, dataDispatch) = React.useContext(DataContext.context)
 
-  let getParameters = (~location: string) => {
-    let search = `${location}.json?country=nz&proximity=ip&types=place,postcode,address,poi&access_token=${Map.mapboxAccessToken}`
-    Js.Global.encodeURI(search)
-  }
-
   // * Geocode upon submit - auto accept closest possible match
   let originCallback = (a: Common.GeocodeResponse.t) => dispatch(SetOriginPosition(a.features[0]))
   let destinationCallback = (a: Common.GeocodeResponse.t) => dispatch(SetDestinationPosition(a.features[0]))
@@ -18,23 +13,57 @@ let make = () => {
   let getCoordinates = (~parameters, ~callback) => Data.getCoordinates(~parameters, ~callback, ~errorHandler=coordinatesErrorHandler)
 
   let callbackPlan = a => dataDispatch(DataContext.Action.SetPlan([a]))
-  let getPlanData = () => Data.getPlan(~callback=callbackPlan, ~errorHandler=planErrorHandler)
+  let getPlanData = (~parameters) => Data.getPlan(~parameters, ~callback=callbackPlan, ~errorHandler=planErrorHandler)
 
   let handleClick = (evt: ReactEvent.Mouse.t) => {
-    let originParameters = getParameters(~location=state.origin)
-    let destinationParameters = getParameters(~location=state.destination)
+    switch state.origin {
+    | "" => ()
+    | _ => {
+        let originParameters = APIFunctions.getCoordinatesParameters(~location=state.origin)
+        getCoordinates(~parameters=originParameters, ~callback=originCallback)
+      }
+    }
 
-    getCoordinates(~parameters=originParameters, ~callback=originCallback)
-    getCoordinates(~parameters=destinationParameters, ~callback=destinationCallback)
+    switch state.destination {
+    | "" => ()
+    | _ => {
+        let destinationParameters = APIFunctions.getCoordinatesParameters(~location=state.destination)
+        getCoordinates(~parameters=destinationParameters, ~callback=destinationCallback)
+      }
+    }
   }
 
   React.useEffect2(() => {
-    if (Js.Option.isSome(state.originPosition) && Js.Option.isSome(state.destinationPosition)) {
-      Js.log("test")
-      Js.log(Util.getCurrentDate())
-      Js.log(Util.getCurrentTime())
-      getPlanData()
+    // if (Js.Option.isSome(state.originPosition) && Js.Option.isSome(state.destinationPosition)) {
+    //   Js.log("test")
+    //   Js.log(Util.getCurrentDate())
+    //   Js.log(Util.getCurrentTime())
+
+    //   // ------------------------------------------------------------------------
+
+    //   getPlanData()
+    // }
+
+    switch (state.originPosition, state.destinationPosition) {
+    | (Some(origin), Some(destination)) => {
+        Js.log("test")
+
+        let planParameters = 
+          APIFunctions.getPlanParameters(
+            ~origin=origin.center,
+            ~destination=destination.center,
+            ~time=Util.getCurrentTime(),
+            ~date=Util.getCurrentDate()
+          )
+
+        Js.log(Js.Global.encodeURIComponent(planParameters))
+        
+        getPlanData(~parameters=planParameters)
+        // getPlanData()
+      }
+    | _ => ()
     }
+
     None
   }, (state.originPosition, state.destinationPosition))
 

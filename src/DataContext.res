@@ -30,7 +30,7 @@ let initialState: State.t = {
   stops: None,
   plan: [], // TODO: change to option<> once connected to search bars
   itinerary: None,
-  route: 1,
+  route: 0,
   viewState: Mapbox.ViewState.make()
 }
 

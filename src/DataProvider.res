@@ -26,7 +26,7 @@ let reducer = (state: State.t, action) => {
     stops: Some(stops)
   }
   | Action.SetPlan(plan) => 
-  Js.log(plan)
+  Js.log(plan[0])
   {
     ...state,
     plan: plan,
