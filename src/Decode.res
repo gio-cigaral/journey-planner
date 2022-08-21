@@ -105,8 +105,8 @@ module Plan = {
     open Json.Decode
     {
       plan: json |> field("plan", planInfo),
-      previousPageCursor: json |> field("previousPageCursor", Json.Decode.string),
-      nextPageCursor: json |> field("nextPageCursor", Json.Decode.string),
+      previousPageCursor: json |> optional(field("previousPageCursor", Json.Decode.string)),
+      nextPageCursor: json |> optional(field("nextPageCursor", Json.Decode.string)),
       error: json |> optional(field("error", errorInfo))
     }
   }

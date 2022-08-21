@@ -28,7 +28,7 @@ let make = () => {
           }
           {
             switch dataState.itinerary {
-            | Some(itinerary) => <Itinerary itinerary=itinerary[dataState.route] />
+            | Some(itinerary) => <Itinerary itinerary=itinerary[dataState.activeItinerary] />
             | None => React.null
             }
           }

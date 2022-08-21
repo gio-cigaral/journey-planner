@@ -102,8 +102,8 @@ module TripPlannerResponse = {
   
   type t = {
     plan: plan,
-    previousPageCursor: string,
-    nextPageCursor: string,
+    previousPageCursor: option<string>,
+    nextPageCursor: option<string>,
     error: option<error>
   }
 }

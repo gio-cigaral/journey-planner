@@ -5,6 +5,7 @@ type autocomplete =
 
 module State = {
   type t = {
+    displayPlan: bool,
     origin: string,
     originPosition: option<Common.GeocodeResponse.feature>,
     destination: string,
@@ -37,10 +38,7 @@ let reducer = (state: State.t, action) => {
       ...state,
       origin: origin
     }
-  | Action.SetOriginPosition(originPosition) => 
-    Js.log(originPosition.placeName)
-    Js.log(originPosition.center)
-    {
+  | Action.SetOriginPosition(originPosition) => {
       ...state,
       originPosition: Some(originPosition)
     }
@@ -48,10 +46,7 @@ let reducer = (state: State.t, action) => {
       ...state,
       destination: destination
     }
-  | Action.SetDestinationPosition(destinationPosition) => 
-    Js.log(destinationPosition.placeName)
-    Js.log(destinationPosition.center)
-    {
+  | Action.SetDestinationPosition(destinationPosition) => {
       ...state,
       destinationPosition: Some(destinationPosition)
     }
@@ -59,6 +54,7 @@ let reducer = (state: State.t, action) => {
 }
 
 let initialState: State.t = {
+  displayPlan: false,
   origin: "",
   originPosition: None,
   destination: "",

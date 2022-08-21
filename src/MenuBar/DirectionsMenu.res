@@ -3,7 +3,6 @@ let make = () => {
   let (state, dispatch) = React.useContext(DirectionsMenuContext.context)
   let (_, dataDispatch) = React.useContext(DataContext.context)
 
-  // * Geocode upon submit - auto accept closest possible match
   let originCallback = (a: Common.GeocodeResponse.t) => dispatch(SetOriginPosition(a.features[0]))
   let destinationCallback = (a: Common.GeocodeResponse.t) => dispatch(SetDestinationPosition(a.features[0]))
 
@@ -15,6 +14,7 @@ let make = () => {
   let callbackPlan = a => dataDispatch(DataContext.Action.SetPlan([a]))
   let getPlanData = (~parameters) => Data.getPlan(~parameters, ~callback=callbackPlan, ~errorHandler=planErrorHandler)
 
+  // * Geocode upon submit - auto accept closest possible match
   let handleClick = (evt: ReactEvent.Mouse.t) => {
     switch state.origin {
     | "" => ()
@@ -34,32 +34,16 @@ let make = () => {
   }
 
   React.useEffect2(() => {
-    // if (Js.Option.isSome(state.originPosition) && Js.Option.isSome(state.destinationPosition)) {
-    //   Js.log("test")
-    //   Js.log(Util.getCurrentDate())
-    //   Js.log(Util.getCurrentTime())
-
-    //   // ------------------------------------------------------------------------
-
-    //   getPlanData()
-    // }
-
     switch (state.originPosition, state.destinationPosition) {
     | (Some(origin), Some(destination)) => {
-        Js.log("test")
-
         let planParameters = 
           APIFunctions.getPlanParameters(
             ~origin=origin.center,
             ~destination=destination.center,
             ~time=Util.getCurrentTime(),
             ~date=Util.getCurrentDate()
-          )
-
-        Js.log(Js.Global.encodeURIComponent(planParameters))
-        
+          )        
         getPlanData(~parameters=planParameters)
-        // getPlanData()
       }
     | _ => ()
     }

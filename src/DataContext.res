@@ -10,7 +10,7 @@ module Action = {
     | SetSelection(string)
     | SetStops(array<Common.Stop.t>)
     | SetPlan(array<Common.TripPlannerResponse.t>)  // TODO: change to option<> once connected to search bars
-    | SetRoute(int)
+    | SetActiveItinerary(int)
     | SetViewState(Mapbox.ViewState.t)
 }
 
@@ -20,7 +20,7 @@ module State = {
     stops: option<array<Common.Stop.t>>,
     plan: array<Common.TripPlannerResponse.t>,  // TODO: change to option<> once connected to search bars
     itinerary: option<array<Common.Itinerary.t>>,
-    route: int,
+    activeItinerary: int,
     viewState: Mapbox.ViewState.t
   }
 }
@@ -30,7 +30,7 @@ let initialState: State.t = {
   stops: None,
   plan: [], // TODO: change to option<> once connected to search bars
   itinerary: None,
-  route: 0,
+  activeItinerary: 0,
   viewState: Mapbox.ViewState.make()
 }
 
