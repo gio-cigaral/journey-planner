@@ -47,7 +47,12 @@ let make = () => {
           }
         />
       </div>
+
+      <div id="search-submit">
+        // <i className="" />
+      </div>
     </form>
+
     <div id="icon-container" className="absolute top-0 bottom-0 mt-auto mb-auto h-16">
       <img className="w-auto h-full" src="/img/DYNAMIS_ColourSignet.svg" alt="Radiola Dynamis Icon" />
     </div>
