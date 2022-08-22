@@ -1,5 +1,38 @@
+module State = {
+  type t = {
+    search: string,
+    position: option<Common.GeocodeResponse.feature>
+  }
+}
+
+module Action = {
+  type t =
+    | SetSearch(string)
+    | SetPosition(Common.GeocodeResponse.feature)
+}
+
+let initialState: State.t = {
+  search: "",
+  position: None
+}
+
+let reducer = (state: State.t, action) => {
+  switch action {
+  | Action.SetSearch(search) => {
+      ...state,
+      search: search
+    }
+  | Action.SetPosition(position) => {
+      ...state,
+      position: Some(position)
+    }
+  }
+}
+
 @react.component
 let make = () => {
+  let (state, dispatch) = React.useReducer(reducer, initialState)
+
   // TODO: remove "active" styling for text input box
   <div id="search-container" className="flex m-2 relative">
     <form className="flex m-5 w-full h-14 rounded-lg bg-radiola-light-grey shadow-md">
@@ -8,6 +41,10 @@ let make = () => {
           type_="text"
           className="w-full h-full pl-12 pr-12 bg-inherit" 
           placeholder="Enter stop ID or address"
+          value={state.search}
+          onChange={(evt) => 
+            dispatch(SetSearch((evt->ReactEvent.Form.target)["value"]))
+          }
         />
       </div>
     </form>
