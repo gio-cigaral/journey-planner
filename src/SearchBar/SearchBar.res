@@ -3,30 +3,26 @@ let make = () => {
   let (state, dispatch) = React.useContext(SearchBarContext.context)
   let (_, dataDispatch) = React.useContext(DataContext.context)
 
-  // TODO: move logic to handleSubmit
+  let searchErrorHandler = a => Js.log(a)
+  let getCoordinates = (~parameters, ~callback) => Data.getCoordinates(~parameters, ~callback, ~errorHandler=searchErrorHandler)
+
   // Update DataContext state with found/chosen location
-  React.useEffect1(() => {
+  let handleSubmit = (_: ReactEvent.Mouse.t) => {
+    Js.log("submit search")
     switch state.position {
     | Some(position) => {
         dataDispatch(DataContext.Action.SetSearchLocation(position))
       }
-    | _ => ()
-    }
-    None
-  }, [state.position])
-
-  let searchCallback = (a: Common.GeocodeResponse.t) => dispatch(SearchBarContext.Action.SetPosition(a.features[0]))
-  let searchErrorHandler = a => Js.log(a)
-  let getCoordinates = (~parameters, ~callback) => Data.getCoordinates(~parameters, ~callback, ~errorHandler=searchErrorHandler)
-
-  let handleSubmit = (_: ReactEvent.Mouse.t) => {
-    Js.log("submit search")
-    // Default - auto-accept first suggestion returned by geocoding API
-    switch state.search {
-    | "" => ()
-    | _ => {
-        let parameters = APIFunctions.getCoordinatesParameters(~location=state.search)
-        getCoordinates(~parameters, ~callback=searchCallback)
+    | None => {
+        // Default - auto-accept first suggestion returned by geocoding API
+        switch state.search {
+        | "" => ()
+        | _ => {
+            let parameters = APIFunctions.getCoordinatesParameters(~location=state.search)
+            let searchCallback = (a: Common.GeocodeResponse.t) => dispatch(SearchBarContext.Action.SetPosition(a.features[0]))
+            getCoordinates(~parameters, ~callback=searchCallback)
+          }
+        }
       }
     }
   }
