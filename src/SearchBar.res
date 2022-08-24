@@ -63,16 +63,6 @@ let make = () => {
     None
   }, [state.position])
 
-  // React.useEffect1(() => {
-  //   // switch mapState.ref {
-  //   // | Some(map) => Map.flyTo(map, stop.lon, stop.lat, 20)
-  //   // | None => ()
-  //   // }
-  //   Map.flyTo(map, stop.lon, stop.lat, 20)
-
-  //   None
-  // }, [state.position])
-
   // TODO: remove "active" styling for text input box
   <div id="search-container" className="flex m-2 relative">
     <form className="flex flex-row m-5 w-full h-14 rounded-lg bg-radiola-light-grey shadow-md">

@@ -1,4 +1,3 @@
-// TODO: move MenuBar "content" type logic here
 type selection = 
   | Tracker
   | Directions

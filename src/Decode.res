@@ -11,7 +11,6 @@ module Stop = {
   }
 }
 
-// TODO: consider renaming
 module Plan = {
   let placeInfo = (json): Common.Place.t => {
     open Json.Decode

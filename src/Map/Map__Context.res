@@ -41,7 +41,7 @@ let initialViewState: Mapbox.ViewState.t =
   )
 
 let initialState: State.t = {
-  viewState: initialViewState, //Mapbox.ViewState.make()
+  viewState: initialViewState,
   ref: None,
   loaded: false,
   debouncedViewState: Mapbox.ViewState.make(),
