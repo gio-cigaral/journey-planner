@@ -21,17 +21,17 @@ let make = () => {
     <ul id="nav-bar" className="flex flex-row justify-evenly w-full h-14 overflow-hidden rounded-t-xl bg-radiola-blue">
       // TODO: replace current "active" tab highglighting
       // TODO: only show label for large screens
-      <li className="flex flex-col justify-center flex-1 text-center hover:bg-blue-400" onClick={(_) => dataDispatch(DataContext.Action.SetSelection("tracker"))}>
+      <li className="flex flex-col justify-center flex-1 text-center cursor-pointer hover:bg-blue-400" onClick={(_) => dataDispatch(DataContext.Action.SetSelection("tracker"))}>
         <i className="fe fe-radio text-radiola-light-grey/25 text-[2.75rem]" />
         // <div className="text-radiola-light-grey/25 text-xs">{React.string("TRACKER")}</div>
       </li>
 
-      <li className="flex flex-col justify-center flex-1 text-center hover:bg-blue-400" onClick={(_) => dataDispatch(DataContext.Action.SetSelection("directions"))}>
+      <li className="flex flex-col justify-center flex-1 text-center cursor-pointer hover:bg-blue-400" onClick={(_) => dataDispatch(DataContext.Action.SetSelection("directions"))}>
         <i className="fe fe-map-pin text-radiola-light-grey/25 text-[2.5rem]" />
         // <div className="text-radiola-light-grey/25">{React.string("DIRECTIONS")}</div>
       </li>
 
-      <li className="flex flex-col justify-center flex-1 text-center hover:bg-blue-400" onClick={(_) => dataDispatch(DataContext.Action.SetSelection("routes"))}>
+      <li className="flex flex-col justify-center flex-1 text-center cursor-pointer hover:bg-blue-400" onClick={(_) => dataDispatch(DataContext.Action.SetSelection("routes"))}>
         <i className="fe fe-bookmark text-radiola-light-grey/25 text-[2.75rem]" />
         // <div className="text-radiola-light-grey/25">{React.string("ROUTES")}</div>
       </li>

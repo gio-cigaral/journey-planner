@@ -5,17 +5,15 @@ let make = () => {
 
   let originCallback = (a: Common.GeocodeResponse.t) => dispatch(SetOriginPosition(a.features[0]))
   let destinationCallback = (a: Common.GeocodeResponse.t) => dispatch(SetDestinationPosition(a.features[0]))
-
   let coordinatesErrorHandler = a => Js.log(a)
-  let planErrorHandler = a => Js.log(a)
-
   let getCoordinates = (~parameters, ~callback) => Data.getCoordinates(~parameters, ~callback, ~errorHandler=coordinatesErrorHandler)
 
   let callbackPlan = a => dataDispatch(DataContext.Action.SetPlan([a]))
+  let planErrorHandler = a => Js.log(a)
   let getPlanData = (~parameters) => Data.getPlan(~parameters, ~callback=callbackPlan, ~errorHandler=planErrorHandler)
 
   // * Geocode upon submit - auto accept closest possible match
-  let handleClick = (evt: ReactEvent.Mouse.t) => {
+  let handleSubmit = (evt: ReactEvent.Mouse.t) => {
     switch state.origin {
     | "" => ()
     | _ => {
@@ -84,7 +82,7 @@ let make = () => {
       <hr />
 
       <div id="submit-button" className="w-full h-12 border-2 border-gray-300 rounded-full">
-        <button type_="button" className="w-full h-full" onClick={handleClick}>
+        <button type_="button" className="w-full h-full" onClick={handleSubmit}>
           {React.string("Plan my journey")}
         </button>
       </div>

@@ -22,7 +22,10 @@ let reducer = (state: State.t, action) => {
       ...state,
       search: search
     }
-  | Action.SetPosition(position) => {
+  | Action.SetPosition(position) => 
+    Js.log("setting search position")
+    Js.log(position.placeName)
+    {
       ...state,
       position: Some(position)
     }
@@ -33,13 +36,28 @@ let reducer = (state: State.t, action) => {
 let make = () => {
   let (state, dispatch) = React.useReducer(reducer, initialState)
 
+  let searchCallback = (a: Common.GeocodeResponse.t) => dispatch(SetPosition(a.features[0]))
+  let searchErrorHandler = a => Js.log(a)
+  let getCoordinates = (~parameters, ~callback) => Data.getCoordinates(~parameters, ~callback, ~errorHandler=searchErrorHandler)
+
+  let handleSubmit = (evt: ReactEvent.Mouse.t) => {
+    Js.log("submit search")
+    switch state.search {
+    | "" => ()
+    | _ => {
+        let parameters = APIFunctions.getCoordinatesParameters(~location=state.search)
+        getCoordinates(~parameters, ~callback=searchCallback)
+      }
+    }
+  }
+
   // TODO: remove "active" styling for text input box
   <div id="search-container" className="flex m-2 relative">
-    <form className="flex m-5 w-full h-14 rounded-lg bg-radiola-light-grey shadow-md">
+    <form className="flex flex-row m-5 w-full h-14 rounded-lg bg-radiola-light-grey shadow-md">
       <div id="search-bar" className="w-full">
         <input 
           type_="text"
-          className="w-full h-full pl-12 pr-12 bg-inherit" 
+          className="w-full h-full pl-12 bg-inherit" 
           placeholder="Enter stop ID or address"
           value={state.search}
           onChange={(evt) => 
@@ -48,8 +66,12 @@ let make = () => {
         />
       </div>
 
-      <div id="search-submit">
-        // <i className="" />
+      <div 
+        id="search-submit" 
+        className="flex flex-col justify-center w-12 text-center text-black/75 cursor-pointer"
+        onClick={handleSubmit}
+      >
+        <i className="fe fe-search text-3xl" />
       </div>
     </form>
 
