@@ -71,14 +71,14 @@ let make = (~images: array<image>, ~children) => {
   }, [dataState.viewState])
 
   React.useEffect2(() => {
-    switch dataState.search {
+    switch dataState.searchLocation {
     | Some(location) => 
-        Js.log("Flying to: " ++ location.placeName)
+        Js.log("flying to: " ++ location.placeName)
         flyTo(ref, location.center[0], location.center[1], 15)
     | None => ()
     }
     None
-  }, (ref, dataState.search))
+  }, (ref, dataState.searchLocation))
 
   let onMove = (evt) => {
     evt

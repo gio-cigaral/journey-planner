@@ -21,9 +21,9 @@ let reducer = (state: State.t, action) => {
       }
     }
   }
-  | Action.SetSearch(search) => {
+  | Action.SetSearchLocation(searchLocation) => {
     ...state,
-    search: Some(search)
+    searchLocation: Some(searchLocation)
   }
   | Action.SetStops(stops) => {
     ...state,

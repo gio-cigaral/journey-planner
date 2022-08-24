@@ -13,7 +13,9 @@ let make = () => {
 
   <div className="flex flex-col justify-between h-screen">
     <div className="z-10 lg:max-w-sm">
-      <SearchBar />
+      <SearchBarContext>
+        <SearchBar />
+      </SearchBarContext>
     </div>
 
     <div className="z-0 h-full w-full absolute">
