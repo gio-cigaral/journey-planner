@@ -3,6 +3,17 @@ let make = () => {
   let (state, dispatch) = React.useContext(SearchBarContext.context)
   let (_, dataDispatch) = React.useContext(DataContext.context)
 
+  // Update DataContext state with found/chosen location
+  React.useEffect1(() => {
+    switch state.position {
+    | Some(position) => {
+        dataDispatch(DataContext.Action.SetSearchLocation(position))
+      }
+    | _ => ()
+    }
+    None
+  }, [state.position])
+
   let searchCallback = (a: Common.GeocodeResponse.t) => dispatch(SearchBarContext.Action.SetPosition(a.features[0]))
   let searchErrorHandler = a => Js.log(a)
   let getCoordinates = (~parameters, ~callback) => Data.getCoordinates(~parameters, ~callback, ~errorHandler=searchErrorHandler)
@@ -27,15 +38,16 @@ let make = () => {
     getCoordinates(~parameters, ~callback=autocompleteCallback)
   }
 
-  React.useEffect1(() => {
-    switch state.position {
-    | Some(position) => {
-        dataDispatch(DataContext.Action.SetSearchLocation(position))
+  let autocompleteElements = 
+    switch state.autocomplete {
+    | Some(autocomplete) => {
+        autocomplete
+        ->Belt.Array.map((item) => {
+          <div className="p-3 cursor-pointer bg-radiola-light-grey border-b-2 border-black truncate">{React.string(item.placeName)}</div>
+        })
       }
-    | _ => ()
+    | None => [React.null]
     }
-    None
-  }, [state.position])
 
   // TODO: remove "active" styling for text input box
   <div id="search-container" className="flex m-2 relative">
@@ -64,8 +76,11 @@ let make = () => {
         switch state.autocomplete {
         | Some(autocomplete) =>
             if (Belt.Array.length(autocomplete) > 0) {
-              <div id="autocomplete-items" className="absolute z-50 top-full left-0 right-0 border-2 border-b-0 border-t-0 border-gray-300">
-                <div className="p-3 cursor-pointer bg-red-500 border-b-2 border-black"> </div>
+              <div id="autocomplete-items" className="absolute z-40 top-full left-0 right-0 border-2 border-b-0 border-t-0 border-gray-300">
+                // <div className="p-3 cursor-pointer bg-red-500 border-b-2 border-black"> </div>
+                {
+                  React.array(autocompleteElements)
+                }
               </div>
             } else {
               React.null
@@ -75,7 +90,7 @@ let make = () => {
       }
     </form>
 
-    <div id="icon-container" className="absolute top-0 bottom-0 mt-auto mb-auto h-16">
+    <div id="icon-container" className="absolute z-50 top-0 bottom-0 mt-auto mb-auto h-16">
       <img className="w-auto h-full" src="/img/DYNAMIS_ColourSignet.svg" alt="Radiola Dynamis Icon" />
     </div>
   </div>

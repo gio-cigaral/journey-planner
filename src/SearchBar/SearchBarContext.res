@@ -30,7 +30,9 @@ let reducer = (state: State.t, action) => {
       ...state,
       search: search
     }
-  | Action.SetAutocomplete(autocomplete) => {
+  | Action.SetAutocomplete(autocomplete) => 
+    Js.log(autocomplete)
+    {
       ...state,
       autocomplete: Some(autocomplete)
     }
