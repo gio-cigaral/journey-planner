@@ -21,6 +21,10 @@ let reducer = (state: State.t, action) => {
       }
     }
   }
+  | Action.SetSearch(search) => {
+    ...state,
+    search: Some(search)
+  }
   | Action.SetStops(stops) => {
     ...state,
     stops: Some(stops)

@@ -8,6 +8,7 @@ type selection =
 module Action = {
   type t = 
     | SetSelection(string)
+    | SetSearch(Common.GeocodeResponse.feature)
     | SetStops(array<Common.Stop.t>)
     | SetPlan(array<Common.TripPlannerResponse.t>)  // TODO: change to option<> once connected to search bars
     | SetActiveItinerary(int)
@@ -17,6 +18,7 @@ module Action = {
 module State = {
   type t = {
     selection: selection,
+    search: option<Common.GeocodeResponse.feature>,
     stops: option<array<Common.Stop.t>>,
     plan: array<Common.TripPlannerResponse.t>,  // TODO: change to option<> once connected to search bars
     itinerary: option<array<Common.Itinerary.t>>,
@@ -27,6 +29,7 @@ module State = {
 
 let initialState: State.t = {
   selection: Empty,
+  search: None,
   stops: None,
   plan: [], // TODO: change to option<> once connected to search bars
   itinerary: None,

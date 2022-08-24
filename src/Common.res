@@ -113,7 +113,7 @@ module GeocodeResponse = {
     id: string,
     relevance: float,
     placeName: string,
-    center: array<float>
+    center: array<float>      // center: [lon, lat]
   }
 
   type t = {

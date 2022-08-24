@@ -35,12 +35,13 @@ let reducer = (state: State.t, action) => {
 @react.component
 let make = () => {
   let (state, dispatch) = React.useReducer(reducer, initialState)
+  let (_, dataDispatch) = React.useContext(DataContext.context)
 
   let searchCallback = (a: Common.GeocodeResponse.t) => dispatch(SetPosition(a.features[0]))
   let searchErrorHandler = a => Js.log(a)
   let getCoordinates = (~parameters, ~callback) => Data.getCoordinates(~parameters, ~callback, ~errorHandler=searchErrorHandler)
 
-  let handleSubmit = (evt: ReactEvent.Mouse.t) => {
+  let handleSubmit = (_: ReactEvent.Mouse.t) => {
     Js.log("submit search")
     switch state.search {
     | "" => ()
@@ -50,6 +51,27 @@ let make = () => {
       }
     }
   }
+
+  React.useEffect1(() => {
+    switch state.position {
+    | Some(position) => {
+        Js.log("HELLO - " ++ position.placeName)
+        dataDispatch(DataContext.Action.SetSearch(position))
+      }
+    | _ => ()
+    }
+    None
+  }, [state.position])
+
+  // React.useEffect1(() => {
+  //   // switch mapState.ref {
+  //   // | Some(map) => Map.flyTo(map, stop.lon, stop.lat, 20)
+  //   // | None => ()
+  //   // }
+  //   Map.flyTo(map, stop.lon, stop.lat, 20)
+
+  //   None
+  // }, [state.position])
 
   // TODO: remove "active" styling for text input box
   <div id="search-container" className="flex m-2 relative">

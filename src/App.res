@@ -26,6 +26,12 @@ let make = () => {
             | None => React.null
             }
           }
+          // {
+          //   switch dataState.searchLocation {
+          //   | Some(location) => 
+          //   | None => React.null
+          //   }
+          // }
           {
             switch dataState.itinerary {
             | Some(itinerary) => <Itinerary itinerary=itinerary[dataState.activeItinerary] />
