@@ -4,9 +4,16 @@ type selection =
   | Routes
   | Empty
 
+module Focus = {
+  type t =
+    | Search
+    | Empty
+}
+
 module Action = {
   type t = 
     | SetSelection(string)
+    | SetFocus(Focus.t)
     | SetSearchLocation(Common.GeocodeResponse.feature)
     | SetStops(array<Common.Stop.t>)
     | SetPlan(array<Common.TripPlannerResponse.t>)  // TODO: change to option<> once connected to search bars
@@ -17,6 +24,7 @@ module Action = {
 module State = {
   type t = {
     selection: selection,
+    focus: Focus.t,
     searchLocation: option<Common.GeocodeResponse.feature>,
     stops: option<array<Common.Stop.t>>,
     plan: array<Common.TripPlannerResponse.t>,  // TODO: change to option<> once connected to search bars
@@ -28,6 +36,7 @@ module State = {
 
 let initialState: State.t = {
   selection: Empty,
+  focus: Empty,
   searchLocation: None,
   stops: None,
   plan: [], // TODO: change to option<> once connected to search bars

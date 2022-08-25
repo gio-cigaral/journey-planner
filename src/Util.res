@@ -19,5 +19,10 @@ let getCurrentTime = () => {
   hours12 ++ ":" ++ minutesFormat ++ period
 }
 
+let emptyFocus = (dispatch) => {
+  Js.log("focus - empty")
+  dispatch(DataContext.Action.SetFocus(DataContext.Focus.Empty))
+}
+
 // React
 let getInnerWidth: unit => int = %raw(`() => window.innerWidth`)

@@ -21,6 +21,10 @@ let reducer = (state: State.t, action) => {
       }
     }
   }
+  | Action.SetFocus(focus) => {
+    ...state,
+    focus: focus
+  }
   | Action.SetSearchLocation(searchLocation) => {
     ...state,
     searchLocation: Some(searchLocation)

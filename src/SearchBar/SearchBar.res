@@ -1,7 +1,7 @@
 @react.component
 let make = () => {
   let (state, dispatch) = React.useContext(SearchBarContext.context)
-  let (_, dataDispatch) = React.useContext(DataContext.context)
+  let (dataState, dataDispatch) = React.useContext(DataContext.context)
 
   let searchErrorHandler = a => Js.log(a)
   let getCoordinates = (~parameters, ~callback) => Data.getCoordinates(~parameters, ~callback, ~errorHandler=searchErrorHandler)
@@ -58,11 +58,22 @@ let make = () => {
     | None => [React.null]
     }
 
+  let setFocus = () => {
+    Js.log("focus - search bar input")
+    dataDispatch(DataContext.Action.SetFocus(DataContext.Focus.Search))
+  }
+
+  let activeAutocomplete = 
+    switch dataState.focus {
+    | Search => "block"
+    | Empty => "hidden"
+    }
+
   // TODO: remove "active" styling for text input box
   <div id="search-container" className="flex m-2 relative">
     // TODO: override or disable default "onSubmit" function 
     <form className="relative flex flex-row m-5 w-full h-14 rounded-lg bg-radiola-light-grey shadow-md" onSubmit={(evt) => ReactEvent.Form.preventDefault(evt)}>
-      <div id="search-bar" className="w-full">
+      <div id="search-bar" className="w-full" onClick={(_) => setFocus()}>
         <input 
           type_="text"
           className="w-full h-full pl-12 pr-12 bg-inherit" 
@@ -80,14 +91,14 @@ let make = () => {
         <i className="fe fe-search text-3xl" />
       </div>
 
-      <div id="autocomplete-items" className="absolute z-40 top-full left-0 right-0 border-2 border-b-0 border-gray-300">
+      <div id="autocomplete-items" className=`${activeAutocomplete} absolute z-40 top-full left-0 right-0 border-2 border-b-0 border-gray-300`>
         {
           React.array(autocompleteElements)
         }
       </div>
     </form>
 
-    <div id="icon-container" className="absolute z-50 top-0 bottom-0 mt-auto mb-auto h-16">
+    <div id="icon-container" className="absolute z-50 top-0 bottom-0 mt-auto mb-auto h-16" onClick={(_) => Util.emptyFocus(dataDispatch)}>
       <img className="w-auto h-full" src="/img/DYNAMIS_ColourSignet.svg" alt="Radiola Dynamis Icon" />
     </div>
   </div>
