@@ -100,18 +100,21 @@ let make = (~images: array<image>, ~children) => {
       dataDispatch(DataContext.Action.SetSelection(""))
     }
 
-    Js.log("user clicked")
+    // Move focus to map
+    Js.log("focus - map")
+    dataDispatch(DataContext.Action.SetFocus(DataContext.Focus.Map))
+
     switch evt.features {
     | Some(features) => 
         switch Belt.Array.get(features, 0) {
         | Some(feature) =>
             switch Mapbox.Feature.featureGet(feature.properties) {
-            | Some(id) => Js.log("clicked on feature: " ++ id)
-            | None => Js.log("clicked - but couldn't find property")
+            | Some(id) => Js.log("map clicked on feature: " ++ id)
+            | None => Js.log("map clicked - but couldn't find property")
             }
-        | None => Js.log("clicked - features.size = " ++ Belt.Int.toString(Belt.Array.length(features)))
+        | None => Js.log("map clicked - features.size = " ++ Belt.Int.toString(Belt.Array.length(features)))
         }
-    | None => Js.log("clicked - no features")
+    | None => Js.log("map clicked - no features")
     }
   }
 

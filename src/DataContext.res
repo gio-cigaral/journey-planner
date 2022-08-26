@@ -7,6 +7,7 @@ type selection =
 module Focus = {
   type t =
     | Search
+    | Map
     | Empty
 }
 

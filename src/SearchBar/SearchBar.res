@@ -66,7 +66,7 @@ let make = () => {
   let activeAutocomplete = 
     switch dataState.focus {
     | Search => "block"
-    | Empty => "hidden"
+    | _ => "hidden"
     }
 
   // TODO: remove "active" styling for text input box
