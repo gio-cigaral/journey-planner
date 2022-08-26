@@ -97,7 +97,7 @@ let make = (~images: array<image>, ~children) => {
   let onClick = (evt: Mapbox.MapLayerMouseEvent.t) => {
     // Minimise menubar for mobile devices
     if (Util.getInnerWidth() < 1024) {
-      dataDispatch(DataContext.Action.SetSelection(""))
+      dataDispatch(DataContext.Action.SetSelection(DataContext.Selection.Empty))
     }
 
     // Move focus to map

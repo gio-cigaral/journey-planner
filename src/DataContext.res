@@ -1,8 +1,10 @@
-type selection = 
-  | Tracker
-  | Directions
-  | Routes
-  | Empty
+module Selection = {
+  type t =
+    | Tracker
+    | Directions
+    | Routes
+    | Empty
+} 
 
 module Focus = {
   type t =
@@ -13,7 +15,7 @@ module Focus = {
 
 module Action = {
   type t = 
-    | SetSelection(string)
+    | SetSelection(Selection.t)
     | SetFocus(Focus.t)
     | SetSearchLocation(Common.GeocodeResponse.feature)
     | SetStops(array<Common.Stop.t>)
@@ -24,7 +26,7 @@ module Action = {
 
 module State = {
   type t = {
-    selection: selection,
+    selection: Selection.t,
     focus: Focus.t,
     searchLocation: option<Common.GeocodeResponse.feature>,
     stops: option<array<Common.Stop.t>>,
