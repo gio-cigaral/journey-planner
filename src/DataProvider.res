@@ -10,6 +10,14 @@ let reducer = (state: State.t, action) => {
     ...state,
     focus: focus
   }
+  | Action.AddFocusListener(listener) => {
+    ...state,
+    focusListeners: Belt.Array.concat(state.focusListeners, [listener])
+  }
+  | Action.RemoveFocusListener(listener) => {
+    ...state,
+    focusListeners: Belt.Array.keep(state.focusListeners, x => x != listener)
+  }
   | Action.SetSearchLocation(searchLocation) => {
     ...state,
     searchLocation: Some(searchLocation)
