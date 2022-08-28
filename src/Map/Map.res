@@ -100,10 +100,6 @@ let make = (~images: array<image>, ~children) => {
       dataDispatch(DataContext.Action.SetSelection(DataContext.Selection.Empty))
     }
 
-    // Move focus to map
-    Js.log("focus - map")
-    dataDispatch(DataContext.Action.SetFocus(DataContext.Focus.Map))
-
     switch evt.features {
     | Some(features) => 
         switch Belt.Array.get(features, 0) {

@@ -9,14 +9,31 @@ module Selection = {
 module Focus = {
   type t =
     | Search
+    | MenuBar
+    | DirectionsMenu(string)
     | Map
     | Empty
+}
+
+module FocusListener = {
+  type t = {
+    ref: React.ref<Js.Nullable.t<Dom.element>>,
+    handleInsideClick: (ReactEvent.Mouse.t => unit)
+  }
+
+  @obj
+  external make: (
+    ~ref: React.ref<Js.Nullable.t<Dom.element>>,
+    ~handleInsideClick: (ReactEvent.Mouse.t => unit)
+  ) => t = ""
 }
 
 module Action = {
   type t = 
     | SetSelection(Selection.t)
     | SetFocus(Focus.t)
+    | AddFocusListener(FocusListener.t)
+    | RemoveFocusListener(FocusListener.t)
     | SetSearchLocation(Common.GeocodeResponse.feature)
     | SetStops(array<Common.Stop.t>)
     | SetPlan(array<Common.TripPlannerResponse.t>)  // TODO: change to option<> once connected to search bars
@@ -28,6 +45,7 @@ module State = {
   type t = {
     selection: Selection.t,
     focus: Focus.t,
+    focusListeners: array<FocusListener.t>,  // TODO: double check array is the appropriate collection type here (i.e. is it mutable?)
     searchLocation: option<Common.GeocodeResponse.feature>,
     stops: option<array<Common.Stop.t>>,
     plan: array<Common.TripPlannerResponse.t>,  // TODO: change to option<> once connected to search bars
@@ -40,6 +58,7 @@ module State = {
 let initialState: State.t = {
   selection: Empty,
   focus: Empty,
+  focusListeners: [],
   searchLocation: None,
   stops: None,
   plan: [], // TODO: change to option<> once connected to search bars

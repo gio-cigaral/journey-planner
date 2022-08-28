@@ -1,7 +1,28 @@
 @react.component
 let make = () => {
+  let searchBarInputRef = React.useRef(Js.Nullable.null)
   let (state, dispatch) = React.useContext(SearchBarContext.context)
   let (dataState, dataDispatch) = React.useContext(DataContext.context)
+
+  let handleInsideClick = (evt: ReactEvent.Mouse.t) => {
+    Js.log("inside - search bar")
+    dataDispatch(DataContext.Action.SetFocus(DataContext.Focus.Search))
+  }
+
+  let listener = DataContext.FocusListener.make(
+    ~ref=searchBarInputRef,
+    ~handleInsideClick
+  )
+
+  React.useEffect0(() => {
+    dataDispatch(DataContext.Action.AddFocusListener(listener))
+
+    let cleanup = () => {
+      dataDispatch(DataContext.Action.RemoveFocusListener(listener))
+    }
+
+    Some(cleanup)
+  })
 
   let searchErrorHandler = a => Js.log(a)
   let getCoordinates = (~parameters, ~callback) => Data.getCoordinates(~parameters, ~callback, ~errorHandler=searchErrorHandler)
@@ -11,6 +32,7 @@ let make = () => {
     Js.log("submit search")
     switch state.position {
     | Some(position) => {
+        // TODO: run "dataDispatch(DataContext.Action.SetSearchLocation(a.features[0]))" once position is found
         dataDispatch(DataContext.Action.SetSearchLocation(position))
       }
     | None => {
@@ -19,7 +41,10 @@ let make = () => {
         | "" => ()
         | _ => {
             let parameters = APIFunctions.getCoordinatesParameters(~location=state.search)
-            let searchCallback = (a: Common.GeocodeResponse.t) => dispatch(SearchBarContext.Action.SetPosition(a.features[0]))
+            let searchCallback = (a: Common.GeocodeResponse.t) => {
+              dispatch(SearchBarContext.Action.SetPosition(a.features[0]))
+              dataDispatch(DataContext.Action.SetSearchLocation(a.features[0]))
+            }
             getCoordinates(~parameters, ~callback=searchCallback)
           }
         }
@@ -58,23 +83,18 @@ let make = () => {
     | None => [React.null]
     }
 
-  let setFocus = () => {
-    Js.log("focus - search bar input")
-    dataDispatch(DataContext.Action.SetFocus(DataContext.Focus.Search))
-  }
-
   let activeAutocomplete = 
     switch dataState.focus {
     | Search => "block"
-    | _ => "hidden"
+    | _ => "hidden border-0"
     }
 
   // TODO: remove "active" styling for text input box
   <div id="search-container" className="flex m-2 relative">
-    // TODO: override or disable default "onSubmit" function 
     <form className="relative flex flex-row m-5 w-full h-14 rounded-lg bg-radiola-light-grey shadow-md" onSubmit={(evt) => ReactEvent.Form.preventDefault(evt)}>
-      <div id="search-bar" className="w-full" onClick={(_) => setFocus()}>
+      <div id="search-bar" className="w-full">
         <input 
+          ref={ReactDOM.Ref.domRef(searchBarInputRef)}
           type_="text"
           className="w-full h-full pl-12 pr-12 bg-inherit" 
           placeholder="Enter stop ID or address"

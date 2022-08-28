@@ -26,3 +26,9 @@ let emptyFocus = (dispatch) => {
 
 // React
 let getInnerWidth: unit => int = %raw(`() => window.innerWidth`)
+
+@scope("document") @val
+external addDocumentEventListener: (string, ReactEvent.Mouse.t => unit) => unit = "addEventListener"
+
+@scope("document") @val
+external removeDocumentEventListener: (string, ReactEvent.Mouse.t => unit) => unit = "removeEventListener"

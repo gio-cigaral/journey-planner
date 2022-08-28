@@ -1,5 +1,6 @@
 @react.component
 let make = () => {
+  let appRef = React.useRef(Js.Nullable.null)
   let (dataState, dataDispatch) = React.useContext(DataContext.context)
 
   let errorHandler = a => Js.log(a)
@@ -7,11 +8,45 @@ let make = () => {
   let getStopData = () => Data.getStops(~callback, ~errorHandler)
 
   React.useEffect0(() => {
-    getStopData()
+    // TODO: process stops
+    // getStopData()
     None
   })
 
-  <div className="flex flex-col justify-between h-screen">
+  React.useEffect2(() => {
+    let handleClick = (evt) => {
+      let targetDom = ReactEvent.Mouse.target(evt)
+      let targetListener: array<DataContext.FocusListener.t> = Belt.Array.keepMap(dataState.focusListeners, (listener) => {
+        switch listener.ref.current->Js.Nullable.toOption {
+        | Some(dom) => {
+            if (ReactDOM.domElementToObj(dom) == targetDom) {
+              Some(listener)
+            } else {
+              None
+            }
+          }
+        | None => 
+            None
+        }
+      })
+
+      if (Belt.Array.length(targetListener) == 0) {
+        dataDispatch(DataContext.Action.SetFocus(DataContext.Focus.Empty))
+      } else {
+        targetListener[0].handleInsideClick(evt)
+      }
+    }
+
+    Util.addDocumentEventListener("click", handleClick)
+
+    let cleanup = () => {
+      Util.removeDocumentEventListener("click", handleClick)
+    }
+
+    Some(cleanup)
+  }, (appRef, dataState.focusListeners))
+
+  <div ref={ReactDOM.Ref.domRef(appRef)} className="flex flex-col justify-between h-screen">
     <div className="z-10 lg:max-w-sm">
       <SearchBarContext>
         <SearchBar />

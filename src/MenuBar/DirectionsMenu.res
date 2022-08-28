@@ -1,5 +1,7 @@
 @react.component
 let make = () => {
+  let originBarRef = React.useRef(Js.Nullable.null)
+  let destinationBarRef = React.useRef(Js.Nullable.null)
   let (state, dispatch) = React.useContext(DirectionsMenuContext.context)
   let (_, dataDispatch) = React.useContext(DataContext.context)
 
@@ -11,6 +13,56 @@ let make = () => {
   let callbackPlan = a => dataDispatch(DataContext.Action.SetPlan([a]))
   let planErrorHandler = a => Js.log(a)
   let getPlanData = (~parameters) => Data.getPlan(~parameters, ~callback=callbackPlan, ~errorHandler=planErrorHandler)
+
+  React.useEffect2(() => {
+    switch (state.originPosition, state.destinationPosition) {
+    | (Some(origin), Some(destination)) => {
+        let planParameters = 
+          APIFunctions.getPlanParameters(
+            ~origin=origin.center,
+            ~destination=destination.center,
+            ~time=Util.getCurrentTime(),
+            ~date=Util.getCurrentDate()
+          )        
+        getPlanData(~parameters=planParameters)
+      }
+    | _ => ()
+    }
+
+    None
+  }, (state.originPosition, state.destinationPosition))
+
+  let originHandleInsideClick = (evt: ReactEvent.Mouse.t) => {
+    Js.log("inside - origin bar")
+    dataDispatch(DataContext.Action.SetFocus(DataContext.Focus.DirectionsMenu("origin")))
+  }
+
+  let destinationHandleInsideClieck = (evt: ReactEvent.Mouse.t) => {
+    Js.log("inside - destination bar")
+    dataDispatch(DataContext.Action.SetFocus(DataContext.Focus.DirectionsMenu("destination")))
+  }
+
+  let originListener = DataContext.FocusListener.make(
+    ~ref=originBarRef,
+    ~handleInsideClick=originHandleInsideClick
+  )
+
+  let destinationListener = DataContext.FocusListener.make(
+    ~ref=destinationBarRef,
+    ~handleInsideClick=destinationHandleInsideClieck
+  )
+
+  React.useEffect0(() => {
+    dataDispatch(DataContext.Action.AddFocusListener(originListener))
+    dataDispatch(DataContext.Action.AddFocusListener(destinationListener))
+
+    let cleanup = () => {
+      dataDispatch(DataContext.Action.RemoveFocusListener(originListener))
+      dataDispatch(DataContext.Action.RemoveFocusListener(destinationListener))
+    }
+
+    Some(cleanup)
+  })
 
   // * Geocode upon submit - auto accept closest possible match
   let handleSubmit = (evt: ReactEvent.Mouse.t) => {
@@ -31,28 +83,11 @@ let make = () => {
     }
   }
 
-  React.useEffect2(() => {
-    switch (state.originPosition, state.destinationPosition) {
-    | (Some(origin), Some(destination)) => {
-        let planParameters = 
-          APIFunctions.getPlanParameters(
-            ~origin=origin.center,
-            ~destination=destination.center,
-            ~time=Util.getCurrentTime(),
-            ~date=Util.getCurrentDate()
-          )        
-        getPlanData(~parameters=planParameters)
-      }
-    | _ => ()
-    }
-
-    None
-  }, (state.originPosition, state.destinationPosition))
-
   <div id="directions-container" className="h-full w-full p-5">
     <form className="flex flex-col justify-evenly h-4/5 bg-radiola-light-grey">
       <div id="origin-input-bar" className="relative w-full h-12 border-2 border-gray-300 rounded-lg">
         <input 
+          ref={ReactDOM.Ref.domRef(originBarRef)}
           type_="text"
           className="w-full h-full pl-12 pr-12 bg-inherit" 
           placeholder="From"
@@ -61,14 +96,11 @@ let make = () => {
             dispatch(SetOrigin((evt->ReactEvent.Form.target)["value"]))
           }
         />
-        // TODO: autocomplete div
-        // <div id="autocomplete-items" className="absolute z-50 top-full left-0 right-0 border-2 border-b-0 border-t-0 border-gray-300">
-        //   <div id="item" className="p-3 cursor-pointer bg-red-500 border-b-2 border-black"> </div>
-        // </div>
       </div>
 
       <div id="destination-input-bar" className="w-full h-12 border-2 border-gray-300 rounded-lg">
         <input 
+          ref={ReactDOM.Ref.domRef(destinationBarRef)}
           type_="text"
           className="w-full h-full pl-12 pr-12 bg-inherit" 
           placeholder="To"
