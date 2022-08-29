@@ -3,34 +3,7 @@ let make = () => {
   let originBarRef = React.useRef(Js.Nullable.null)
   let destinationBarRef = React.useRef(Js.Nullable.null)
   let (state, dispatch) = React.useContext(DirectionsMenuContext.context)
-  let (_, dataDispatch) = React.useContext(DataContext.context)
-
-  let originCallback = (a: Common.GeocodeResponse.t) => dispatch(SetOriginPosition(a.features[0]))
-  let destinationCallback = (a: Common.GeocodeResponse.t) => dispatch(SetDestinationPosition(a.features[0]))
-  let coordinatesErrorHandler = a => Js.log(a)
-  let getCoordinates = (~parameters, ~callback) => Data.getCoordinates(~parameters, ~callback, ~errorHandler=coordinatesErrorHandler)
-
-  let callbackPlan = a => dataDispatch(DataContext.Action.SetPlan([a]))
-  let planErrorHandler = a => Js.log(a)
-  let getPlanData = (~parameters) => Data.getPlan(~parameters, ~callback=callbackPlan, ~errorHandler=planErrorHandler)
-
-  React.useEffect2(() => {
-    switch (state.originPosition, state.destinationPosition) {
-    | (Some(origin), Some(destination)) => {
-        let planParameters = 
-          APIFunctions.getPlanParameters(
-            ~origin=origin.center,
-            ~destination=destination.center,
-            ~time=Util.getCurrentTime(),
-            ~date=Util.getCurrentDate()
-          )        
-        getPlanData(~parameters=planParameters)
-      }
-    | _ => ()
-    }
-
-    None
-  }, (state.originPosition, state.destinationPosition))
+  let (dataState, dataDispatch) = React.useContext(DataContext.context)
 
   let originHandleInsideClick = (evt: ReactEvent.Mouse.t) => {
     Js.log("inside - origin bar")
@@ -66,6 +39,33 @@ let make = () => {
     Some(cleanup)
   })
 
+  let originCallback = (a: Common.GeocodeResponse.t) => dispatch(SetOriginPosition(a.features[0]))
+  let destinationCallback = (a: Common.GeocodeResponse.t) => dispatch(SetDestinationPosition(a.features[0]))
+  let coordinatesErrorHandler = a => Js.log(a)
+  let getCoordinates = (~parameters, ~callback) => Data.getCoordinates(~parameters, ~callback, ~errorHandler=coordinatesErrorHandler)
+
+  let callbackPlan = a => dataDispatch(DataContext.Action.SetPlan([a]))
+  let planErrorHandler = a => Js.log(a)
+  let getPlanData = (~parameters) => Data.getPlan(~parameters, ~callback=callbackPlan, ~errorHandler=planErrorHandler)
+
+  React.useEffect2(() => {
+    switch (state.originPosition, state.destinationPosition) {
+    | (Some(origin), Some(destination)) => {
+        let planParameters = 
+          APIFunctions.getPlanParameters(
+            ~origin=origin.center,
+            ~destination=destination.center,
+            ~time=Util.getCurrentTime(),
+            ~date=Util.getCurrentDate()
+          )        
+        getPlanData(~parameters=planParameters)
+      }
+    | _ => ()
+    }
+
+    None
+  }, (state.originPosition, state.destinationPosition))
+
   // * Geocode upon submit - auto accept closest possible match
   let handleSubmit = (evt: ReactEvent.Mouse.t) => {
     switch state.origin {
@@ -84,6 +84,90 @@ let make = () => {
       }
     }
   }
+  
+  let handleOriginChange = (evt: ReactEvent.Form.t) => {
+    let search = (evt->ReactEvent.Form.target)["value"]
+    let parameters = APIFunctions.getCoordinatesParameters(~location=search)
+    let callback = (a: Common.GeocodeResponse.t) => dispatch(DirectionsMenuContext.Action.SetOriginAutocomplete(a.features))
+
+    dispatch(SetOrigin(search))
+    getCoordinates(~parameters, ~callback)
+  }
+
+  let handleOriginChosenSuggestion = (item: Common.GeocodeResponse.feature) => {
+    dispatch(DirectionsMenuContext.Action.SetOrigin(item.placeName))
+    dispatch(DirectionsMenuContext.Action.SetOriginPosition(item))
+  }
+
+  let originAutocompleteElements = 
+    switch state.originAutocomplete {
+    | Some(autocomplete) => {
+        autocomplete
+        ->Belt.Array.mapWithIndex((index, item) => {
+          <div 
+            key={"origin-suggestion-" ++ Belt.Int.toString(index)} 
+            className="pl-3 pr-3 pt-1 pb-1 h-8 cursor-pointer bg-gray-100 border-b-2 border-gray-300 truncate hover:bg-gray-300"
+            onClick={(_) => handleOriginChosenSuggestion(item)}
+          >
+            {React.string(item.placeName)}
+          </div>
+        })
+      }
+    | None => [React.null]
+    }
+
+  let activeOriginAutocomplete = 
+    switch dataState.focus {
+    | DirectionsMenu(bar) => {
+        switch bar {
+        | "origin" => "block"
+        | _ => "hidden border-0"
+        }
+      }
+    | _ => "hidden border-0"
+    }
+
+  let handleDestinationChange = (evt: ReactEvent.Form.t) => {
+    let search = (evt->ReactEvent.Form.target)["value"]
+    let parameters = APIFunctions.getCoordinatesParameters(~location=search)
+    let callback = (a: Common.GeocodeResponse.t) => dispatch(DirectionsMenuContext.Action.SetDestinationAutocomplete(a.features))
+
+    dispatch(SetDestination(search))
+    getCoordinates(~parameters, ~callback)
+  }
+
+  let handleDestinationChosenSuggestion = (item: Common.GeocodeResponse.feature) => {
+    dispatch(DirectionsMenuContext.Action.SetDestination(item.placeName))
+    dispatch(DirectionsMenuContext.Action.SetDestinationPosition(item))
+  }
+
+  let destinationAutocompleteElements = 
+    switch state.destinationAutocomplete {
+    | Some(autocomplete) => {
+        autocomplete
+        ->Belt.Array.mapWithIndex((index, item) => {
+          <div 
+            key={"destination-suggestion-" ++ Belt.Int.toString(index)} 
+            className="pl-3 pr-3 pt-1 pb-1 h-8 cursor-pointer bg-gray-100 border-b-2 border-gray-300 truncate hover:bg-gray-300"
+            onClick={(_) => handleDestinationChosenSuggestion(item)}
+          >
+            {React.string(item.placeName)}
+          </div>
+        })
+      }
+    | None => [React.null]
+    }
+
+  let activeDestinationAutocomplete = 
+    switch dataState.focus {
+    | DirectionsMenu(bar) => {
+        switch bar {
+        | "destination" => "block"
+        | _ => "hidden border-0"
+        }
+      }
+    | _ => "hidden border-0"
+    }
 
   <div id="directions-container" className="h-full w-full p-5">
     <form className="flex flex-col justify-evenly h-4/5 bg-radiola-light-grey">
@@ -94,38 +178,31 @@ let make = () => {
           className="w-full h-full pl-12 pr-12 bg-inherit" 
           placeholder="From"
           value={state.origin}
-          onChange={(evt) => 
-            dispatch(SetOrigin((evt->ReactEvent.Form.target)["value"]))
-          }
+          onChange={handleOriginChange}
         />
-        <div id="autocomplete-items" className=`block h-6 absolute z-40 top-full left-0 right-0 border-2 border-b-0 border-gray-300`>
-        // {
-        //   React.array(autocompleteElements)
-        // }
 
-        <div 
-          // key={"search-suggestion-" ++ Belt.Int.toString(index)} 
-          className="p-3 cursor-pointer bg-radiola-light-grey border-b-2 border-gray-300 truncate hover:bg-gray-300"
-          // onClick={(_) => handleChosenSuggestion(item)}
-        >
-          {React.string("Tauranga Hospital, Tauranga, Bay of Plenty")}
+        <div id="origin-autocomplete-items" className=`${activeOriginAutocomplete} absolute z-40 top-full left-0 right-0 border-2 border-b-0 border-gray-300`>
+          {
+            React.array(originAutocompleteElements)
+          }
         </div>
       </div>
-      </div>
 
-      
-
-      <div id="destination-input-bar" className="w-full h-12 border-2 border-gray-300 rounded-lg">
+      <div id="destination-input-bar" className="relative w-full h-12 border-2 border-gray-300 rounded-lg">
         <input 
           ref={ReactDOM.Ref.domRef(destinationBarRef)}
           type_="text"
           className="w-full h-full pl-12 pr-12 bg-inherit" 
           placeholder="To"
           value={state.destination}
-          onChange={(evt) =>
-            dispatch(SetDestination((evt->ReactEvent.Form.target)["value"]))
-          }
+          onChange={handleDestinationChange}
         />
+
+        <div id="destination-autocomplete-items" className=`${activeDestinationAutocomplete} absolute z-40 top-full left-0 right-0 border-2 border-b-0 border-gray-300`>
+          {
+            React.array(destinationAutocompleteElements)
+          }
+        </div>
       </div>
 
       <hr />

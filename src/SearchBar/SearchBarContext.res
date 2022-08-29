@@ -30,16 +30,11 @@ let reducer = (state: State.t, action) => {
       ...state,
       search: search
     }
-  | Action.SetAutocomplete(autocomplete) => 
-    Js.log(autocomplete)
-    {
+  | Action.SetAutocomplete(autocomplete) => {
       ...state,
       autocomplete: Some(autocomplete)
     }
-  | Action.SetPosition(position) => 
-    Js.log("setting search position")
-    Js.log(position.placeName)
-    {
+  | Action.SetPosition(position) => {
       ...state,
       position: Some(position)
     }
