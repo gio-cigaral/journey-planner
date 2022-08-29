@@ -1,10 +1,8 @@
-module Selection = {
-  type t =
-    | Tracker
-    | Directions
-    | Routes
-    | Empty
-} 
+type selection = 
+  | Tracker
+  | Directions
+  | Routes
+  | Empty
 
 module Focus = {
   type t =
@@ -17,12 +15,14 @@ module Focus = {
 
 module FocusListener = {
   type t = {
+    id: string,
     ref: React.ref<Js.Nullable.t<Dom.element>>,
     handleInsideClick: (ReactEvent.Mouse.t => unit)
   }
 
   @obj
   external make: (
+    ~id: string,
     ~ref: React.ref<Js.Nullable.t<Dom.element>>,
     ~handleInsideClick: (ReactEvent.Mouse.t => unit)
   ) => t = ""
@@ -30,7 +30,7 @@ module FocusListener = {
 
 module Action = {
   type t = 
-    | SetSelection(Selection.t)
+    | SetSelection(string)
     | SetFocus(Focus.t)
     | AddFocusListener(FocusListener.t)
     | RemoveFocusListener(FocusListener.t)
@@ -43,7 +43,7 @@ module Action = {
 
 module State = {
   type t = {
-    selection: Selection.t,
+    selection: selection,
     focus: Focus.t,
     focusListeners: array<FocusListener.t>,  // TODO: double check array is the appropriate collection type here (i.e. is it mutable?)
     searchLocation: option<Common.GeocodeResponse.feature>,

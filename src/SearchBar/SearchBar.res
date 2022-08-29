@@ -10,6 +10,7 @@ let make = () => {
   }
 
   let listener = DataContext.FocusListener.make(
+    ~id="search-bar",
     ~ref=searchBarInputRef,
     ~handleInsideClick
   )

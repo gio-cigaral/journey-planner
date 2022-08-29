@@ -2,9 +2,26 @@ open DataContext
 
 let reducer = (state: State.t, action) => {
   switch action {
-  | Action.SetSelection(selection) => {
+  | Action.SetSelection(selection) => 
+  Js.log(selection)
+  {
     ...state,
-    selection: selection
+    selection: {
+      switch selection {
+      | "tracker" => 
+        Js.log("displaying tracker")
+        Tracker
+      | "directions" => 
+        Js.log("displaying directions")
+        Directions
+      | "routes" => 
+        Js.log("displaying routes")
+        Routes
+      | _ => 
+        Js.log("displaying empty")
+        Empty
+      }
+    }
   }
   | Action.SetFocus(focus) => {
     ...state,
@@ -16,7 +33,7 @@ let reducer = (state: State.t, action) => {
   }
   | Action.RemoveFocusListener(listener) => {
     ...state,
-    focusListeners: Belt.Array.keep(state.focusListeners, x => x != listener)
+    focusListeners: Belt.Array.keep(state.focusListeners, x => x.id != listener.id)
   }
   | Action.SetSearchLocation(searchLocation) => {
     ...state,

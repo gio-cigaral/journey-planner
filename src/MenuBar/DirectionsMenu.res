@@ -43,11 +43,13 @@ let make = () => {
   }
 
   let originListener = DataContext.FocusListener.make(
+    ~id="origin-input-bar",
     ~ref=originBarRef,
     ~handleInsideClick=originHandleInsideClick
   )
 
   let destinationListener = DataContext.FocusListener.make(
+    ~id="destination-input-bar",
     ~ref=destinationBarRef,
     ~handleInsideClick=destinationHandleInsideClieck
   )
@@ -96,7 +98,22 @@ let make = () => {
             dispatch(SetOrigin((evt->ReactEvent.Form.target)["value"]))
           }
         />
+        <div id="autocomplete-items" className=`block h-6 absolute z-40 top-full left-0 right-0 border-2 border-b-0 border-gray-300`>
+        // {
+        //   React.array(autocompleteElements)
+        // }
+
+        <div 
+          // key={"search-suggestion-" ++ Belt.Int.toString(index)} 
+          className="p-3 cursor-pointer bg-radiola-light-grey border-b-2 border-gray-300 truncate hover:bg-gray-300"
+          // onClick={(_) => handleChosenSuggestion(item)}
+        >
+          {React.string("Tauranga Hospital, Tauranga, Bay of Plenty")}
+        </div>
       </div>
+      </div>
+
+      
 
       <div id="destination-input-bar" className="w-full h-12 border-2 border-gray-300 rounded-lg">
         <input 

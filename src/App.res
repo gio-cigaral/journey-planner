@@ -15,6 +15,7 @@ let make = () => {
 
   React.useEffect2(() => {
     let handleClick = (evt) => {
+      Js.log("outside click handler")
       let targetDom = ReactEvent.Mouse.target(evt)
       let targetListener: array<DataContext.FocusListener.t> = Belt.Array.keepMap(dataState.focusListeners, (listener) => {
         switch listener.ref.current->Js.Nullable.toOption {
@@ -25,8 +26,7 @@ let make = () => {
               None
             }
           }
-        | None => 
-            None
+        | None => None
         }
       })
 
