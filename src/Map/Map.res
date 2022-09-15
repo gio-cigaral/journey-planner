@@ -73,8 +73,8 @@ let make = (~images: array<image>, ~children) => {
   React.useEffect2(() => {
     switch dataState.searchLocation {
     | Some(location) => 
-        Js.log("flying to: " ++ location.placeName)
-        flyTo(ref, location.center[0], location.center[1], 15)
+        Js.log("flying to: " ++ location.position.placeName)
+        flyTo(ref, location.position.center[0], location.position.center[1], 15)
     | None => ()
     }
     None

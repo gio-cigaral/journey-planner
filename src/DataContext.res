@@ -28,13 +28,26 @@ module FocusListener = {
   ) => t = ""
 }
 
+module SearchLocation = {
+  type t = {
+    name: string,
+    position: Common.GeocodeResponse.feature
+  }
+
+  @obj
+  external make: (
+    ~name: string,
+    ~position: Common.GeocodeResponse.feature
+  ) => t = ""
+}
+
 module Action = {
   type t = 
     | SetSelection(string)
     | SetFocus(Focus.t)
     | AddFocusListener(FocusListener.t)
     | RemoveFocusListener(FocusListener.t)
-    | SetSearchLocation(Common.GeocodeResponse.feature)
+    | SetSearchLocation(SearchLocation.t)
     | SetStops(array<Common.Stop.t>)
     | SetPlan(array<Common.TripPlannerResponse.t>)  // TODO: change to option<> once connected to search bars
     | SetActiveItinerary(int)
@@ -46,7 +59,7 @@ module State = {
     selection: selection,
     focus: Focus.t,
     focusListeners: array<FocusListener.t>,  // TODO: double check array is the appropriate collection type here (i.e. is it mutable?)
-    searchLocation: option<Common.GeocodeResponse.feature>,
+    searchLocation: option<SearchLocation.t>,
     stops: option<array<Common.Stop.t>>,
     plan: array<Common.TripPlannerResponse.t>,  // TODO: change to option<> once connected to search bars
     itinerary: option<array<Common.Itinerary.t>>,

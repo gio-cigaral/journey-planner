@@ -31,21 +31,34 @@ let make = () => {
   // Update DataContext state with found/chosen location
   let handleSubmit = (_: ReactEvent.Mouse.t) => {
     Js.log("submit search")
+    
+    let parameters = APIFunctions.getCoordinatesParameters(~location=state.search)
+    let searchCallback = (a: Common.GeocodeResponse.t) => {
+      dispatch(SearchBarContext.Action.SetPosition(a.features[0]))
+      dataDispatch(DataContext.Action.SetSearchLocation(DataContext.SearchLocation.make(~name=state.search, ~position=a.features[0])))
+    }
+
     switch state.position {
     | Some(position) => {
+        Js.log("inside position")
         // TODO: run "dataDispatch(DataContext.Action.SetSearchLocation(a.features[0]))" once position is found
-        dataDispatch(DataContext.Action.SetSearchLocation(position))
+        switch dataState.searchLocation {
+        | Some(searchLocation) => {
+            Js.log(`${searchLocation.name} : ${state.search}`)
+            if (searchLocation.name != state.search) {
+              getCoordinates(~parameters, ~callback=searchCallback)
+            }
+          }
+        | None => dataDispatch(DataContext.Action.SetSearchLocation(DataContext.SearchLocation.make(~name=state.search, ~position)))
+        }
       }
-    | None => {
+    | _ => {
         // Default - auto-accept first suggestion returned by geocoding API
+        Js.log("checking state.search")
         switch state.search {
         | "" => ()
         | _ => {
-            let parameters = APIFunctions.getCoordinatesParameters(~location=state.search)
-            let searchCallback = (a: Common.GeocodeResponse.t) => {
-              dispatch(SearchBarContext.Action.SetPosition(a.features[0]))
-              dataDispatch(DataContext.Action.SetSearchLocation(a.features[0]))
-            }
+            Js.log("running search")
             getCoordinates(~parameters, ~callback=searchCallback)
           }
         }
