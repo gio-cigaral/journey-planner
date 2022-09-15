@@ -6,22 +6,7 @@ let reducer = (state: State.t, action) => {
   Js.log(selection)
   {
     ...state,
-    selection: {
-      switch selection {
-      | "tracker" => 
-        Js.log("displaying tracker")
-        Tracker
-      | "directions" => 
-        Js.log("displaying directions")
-        Directions
-      | "routes" => 
-        Js.log("displaying routes")
-        Routes
-      | _ => 
-        Js.log("displaying empty")
-        Empty
-      }
-    }
+    selection: selection
   }
   | Action.SetFocus(focus) => {
     ...state,

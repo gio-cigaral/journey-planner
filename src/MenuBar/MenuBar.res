@@ -20,24 +20,44 @@ let make = () => {
     | Empty => "hidden"
     | _ => "block h-[20.5rem]"
     }
+
+  let activeTabIcon: (~tab: DataContext.Selection.t) => string =
+    (~tab: DataContext.Selection.t) => {
+      if (tab === dataState.selection) {
+        "text-radiola-light-grey"
+      } else {
+        "text-radiola-light-grey/25"
+      }
+    }
+
+  let activeTabHighlight: (~tab: DataContext.Selection.t) => string = 
+    (~tab: DataContext.Selection.t) => {
+      if (tab === dataState.selection) {
+        "block"
+      } else {
+        "hidden"
+      }
+    }
   
   // TODO: adjust "footer" element height for large screens - starting height too low?
   <div id="footer" className=`${activeFooter} lg:ml-7 lg:mr-7 lg:h-96 shadow-md`>
     <ul id="nav-bar" className="flex flex-row justify-evenly w-full h-14 overflow-hidden rounded-t-xl bg-radiola-blue">
-      // TODO: replace current "active" tab highglighting
       // TODO: only show label for large screens
-      <li className="flex flex-col justify-center flex-1 text-center cursor-pointer hover:bg-blue-400" onClick={(_) => dataDispatch(DataContext.Action.SetSelection("tracker"))}>
-        <i className="fe fe-radio text-radiola-light-grey/25 text-[2.75rem]" />
+      <li className="relative flex flex-col justify-center flex-1 text-center cursor-pointer group" onClick={(_) => dataDispatch(DataContext.Action.SetSelection(DataContext.Selection.Tracker))}>
+        <i className=`fe fe-radio ${activeTabIcon(~tab=DataContext.Selection.Tracker)} text-[2.75rem]` />
+        <div className=`${activeTabHighlight(~tab=DataContext.Selection.Tracker)} group-hover:block absolute bottom-0 left-0 h-2 w-full bg-gradient-to-t from-radiola-red to-radiola-blue`></div>
         // <div className="text-radiola-light-grey/25 text-xs">{React.string("TRACKER")}</div>
       </li>
 
-      <li className="flex flex-col justify-center flex-1 text-center cursor-pointer hover:bg-blue-400" onClick={(_) => dataDispatch(DataContext.Action.SetSelection("directions"))}>
-        <i className="fe fe-map-pin text-radiola-light-grey/25 text-[2.5rem]" />
+      <li className="relative flex flex-col justify-center flex-1 text-center cursor-pointer group" onClick={(_) => dataDispatch(DataContext.Action.SetSelection(DataContext.Selection.Directions))}>
+        <i className=`fe fe-map-pin ${activeTabIcon(~tab=DataContext.Selection.Directions)} text-[2.5rem]` />
+        <div className=`${activeTabHighlight(~tab=DataContext.Selection.Directions)} group-hover:block absolute bottom-0 left-0 h-2 w-full bg-gradient-to-t from-radiola-red to-radiola-blue`></div>
         // <div className="text-radiola-light-grey/25">{React.string("DIRECTIONS")}</div>
       </li>
 
-      <li className="flex flex-col justify-center flex-1 text-center cursor-pointer hover:bg-blue-400" onClick={(_) => dataDispatch(DataContext.Action.SetSelection("routes"))}>
-        <i className="fe fe-bookmark text-radiola-light-grey/25 text-[2.75rem]" />
+      <li className="relative flex flex-col justify-center flex-1 text-center cursor-pointer group" onClick={(_) => dataDispatch(DataContext.Action.SetSelection(DataContext.Selection.Routes))}>
+        <i className=`fe fe-bookmark ${activeTabIcon(~tab=DataContext.Selection.Routes)} text-[2.75rem]` />
+        <div className=`${activeTabHighlight(~tab=DataContext.Selection.Routes)} group-hover:block absolute bottom-0 left-0 h-2 w-full bg-gradient-to-t from-radiola-red to-radiola-blue`></div>
         // <div className="text-radiola-light-grey/25">{React.string("ROUTES")}</div>
       </li>
     </ul>

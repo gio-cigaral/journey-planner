@@ -1,8 +1,10 @@
-type selection = 
-  | Tracker
-  | Directions
-  | Routes
-  | Empty
+module Selection = {
+  type t = 
+    | Tracker
+    | Directions
+    | Routes
+    | Empty
+}
 
 module Focus = {
   type t =
@@ -43,7 +45,7 @@ module SearchLocation = {
 
 module Action = {
   type t = 
-    | SetSelection(string)
+    | SetSelection(Selection.t)
     | SetFocus(Focus.t)
     | AddFocusListener(FocusListener.t)
     | RemoveFocusListener(FocusListener.t)
@@ -56,7 +58,7 @@ module Action = {
 
 module State = {
   type t = {
-    selection: selection,
+    selection: Selection.t,
     focus: Focus.t,
     focusListeners: array<FocusListener.t>,  // TODO: double check array is the appropriate collection type here (i.e. is it mutable?)
     searchLocation: option<SearchLocation.t>,
@@ -69,7 +71,7 @@ module State = {
 }
 
 let initialState: State.t = {
-  selection: Empty,
+  selection: Directions,
   focus: Empty,
   focusListeners: [],
   searchLocation: None,
