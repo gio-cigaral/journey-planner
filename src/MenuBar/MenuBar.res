@@ -42,16 +42,18 @@ let make = () => {
       </li>
     </ul>
 
-    <div id="content" className=`${activeContent} bg-radiola-light-grey lg:block lg:h-[20.5rem]`>
-      // TODO: create react element for each content type
-      {
-        switch dataState.selection {
-        | Tracker => React.null
-        | Directions => <DirectionsMenuContext> <DirectionsMenu /> </DirectionsMenuContext>
-        | Routes => React.null
-        | Empty => React.null
+    <DirectionsMenuContext>
+      <div id="content" className=`${activeContent} bg-radiola-light-grey lg:block lg:h-[20.5rem]`>
+        // TODO: create react element for each content type
+        {
+          switch dataState.selection {
+          | Tracker => React.null
+          | Directions => <DirectionsMenu /> 
+          | Routes => React.null
+          | Empty => React.null
+          }
         }
-      }
-    </div>
+      </div>
+    </DirectionsMenuContext>
   </div>
 }
