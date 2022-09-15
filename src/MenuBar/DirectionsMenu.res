@@ -5,6 +5,7 @@ let make = () => {
   let (state, dispatch) = React.useContext(DirectionsMenuContext.context)
   let (dataState, dataDispatch) = React.useContext(DataContext.context)
 
+  // * ------- COMPONENT FOCUS LISTENERS ------- 
   let originHandleInsideClick = (evt: ReactEvent.Mouse.t) => {
     Js.log("inside - origin bar")
     dataDispatch(DataContext.Action.SetFocus(DataContext.Focus.DirectionsMenu("origin")))
@@ -27,6 +28,7 @@ let make = () => {
     ~handleInsideClick=destinationHandleInsideClieck
   )
 
+  // * Add search bar components to global focus listener
   React.useEffect0(() => {
     dataDispatch(DataContext.Action.AddFocusListener(originListener))
     dataDispatch(DataContext.Action.AddFocusListener(destinationListener))
@@ -39,16 +41,38 @@ let make = () => {
     Some(cleanup)
   })
 
+  // * ------- COORDINATES API CALL  ------- 
   let originCallback = (a: Common.GeocodeResponse.t) => dispatch(SetOriginPosition(a.features[0]))
   let destinationCallback = (a: Common.GeocodeResponse.t) => dispatch(SetDestinationPosition(a.features[0]))
   let coordinatesErrorHandler = a => Js.log(a)
   let getCoordinates = (~parameters, ~callback) => Data.getCoordinates(~parameters, ~callback, ~errorHandler=coordinatesErrorHandler)
 
+  // * ------- PLAN API CALL  ------- 
   let callbackPlan = a => dataDispatch(DataContext.Action.SetPlan([a]))
   let planErrorHandler = a => Js.log(a)
   let getPlanData = (~parameters) => Data.getPlan(~parameters, ~callback=callbackPlan, ~errorHandler=planErrorHandler)
 
-  React.useEffect2(() => {
+  // * Geocode upon submit - auto accept closest possible match
+  let handleSubmit = (evt: ReactEvent.Mouse.t) => {
+    switch (state.origin, state.originPosition) {
+    | ("", _) => ()
+    | (_, Some(_)) => ()
+    | (_, None) => {
+        let originParameters = APIFunctions.getCoordinatesParameters(~location=state.origin)
+        getCoordinates(~parameters=originParameters, ~callback=originCallback)
+      }
+    }
+
+    switch (state.destination, state.destinationPosition) {
+    | ("", _) => ()
+    | (_, Some(_)) => ()
+    | (_, None) => {
+        let destinationParameters = APIFunctions.getCoordinatesParameters(~location=state.destination)
+        getCoordinates(~parameters=destinationParameters, ~callback=destinationCallback)
+      }
+    }
+
+    // Search for itineraries based on origin and destination positions
     switch (state.originPosition, state.destinationPosition) {
     | (Some(origin), Some(destination)) => {
         let planParameters = 
@@ -62,28 +86,9 @@ let make = () => {
       }
     | _ => ()
     }
-
-    None
-  }, (state.originPosition, state.destinationPosition))
-
-  // * Geocode upon submit - auto accept closest possible match
-  let handleSubmit = (evt: ReactEvent.Mouse.t) => {
-    switch state.origin {
-    | "" => ()
-    | _ => {
-        let originParameters = APIFunctions.getCoordinatesParameters(~location=state.origin)
-        getCoordinates(~parameters=originParameters, ~callback=originCallback)
-      }
-    }
-
-    switch state.destination {
-    | "" => ()
-    | _ => {
-        let destinationParameters = APIFunctions.getCoordinatesParameters(~location=state.destination)
-        getCoordinates(~parameters=destinationParameters, ~callback=destinationCallback)
-      }
-    }
   }
+
+  // * ------- HANDLE ORIGIN AUTOCOMPLETE ------- 
   
   let handleOriginChange = (evt: ReactEvent.Form.t) => {
     let search = (evt->ReactEvent.Form.target)["value"]
@@ -126,6 +131,8 @@ let make = () => {
       }
     | _ => "hidden border-0"
     }
+
+  // * ------- HANDLE DESTINATION AUTOCOMPLETE ------- 
 
   let handleDestinationChange = (evt: ReactEvent.Form.t) => {
     let search = (evt->ReactEvent.Form.target)["value"]
