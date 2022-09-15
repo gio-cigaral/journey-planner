@@ -44,20 +44,20 @@ let make = () => {
     <ul id="nav-bar" className="flex flex-row justify-evenly w-full h-14 overflow-hidden rounded-t-xl bg-radiola-blue">
       // TODO: only show label for large screens
       <li className="relative flex flex-col justify-center flex-1 text-center cursor-pointer group" onClick={(_) => dataDispatch(DataContext.Action.SetSelection(DataContext.Selection.Tracker))}>
-        <i className=`fe fe-radio ${activeTabIcon(~tab=DataContext.Selection.Tracker)} text-[2.75rem]` />
-        <div className=`${activeTabHighlight(~tab=DataContext.Selection.Tracker)} group-hover:block absolute bottom-0 left-0 h-2 w-full bg-gradient-to-t from-radiola-red to-radiola-blue`></div>
+        <i className=`fe fe-radio ${activeTabIcon(~tab=DataContext.Selection.Tracker)} z-10 group-hover:text-radiola-light-grey text-[2.75rem]` />
+        <div className=`${activeTabHighlight(~tab=DataContext.Selection.Tracker)} z-0 group-hover:block absolute bottom-0 left-0 h-3 w-full bg-gradient-to-t from-radiola-red to-radiola-blue`></div>
         // <div className="text-radiola-light-grey/25 text-xs">{React.string("TRACKER")}</div>
       </li>
 
       <li className="relative flex flex-col justify-center flex-1 text-center cursor-pointer group" onClick={(_) => dataDispatch(DataContext.Action.SetSelection(DataContext.Selection.Directions))}>
-        <i className=`fe fe-map-pin ${activeTabIcon(~tab=DataContext.Selection.Directions)} text-[2.5rem]` />
-        <div className=`${activeTabHighlight(~tab=DataContext.Selection.Directions)} group-hover:block absolute bottom-0 left-0 h-2 w-full bg-gradient-to-t from-radiola-red to-radiola-blue`></div>
+        <i className=`fe fe-map-pin ${activeTabIcon(~tab=DataContext.Selection.Directions)} z-10 group-hover:text-radiola-light-grey text-[2.5rem]` />
+        <div className=`${activeTabHighlight(~tab=DataContext.Selection.Directions)} z-0 group-hover:block absolute bottom-0 left-0 h-3 w-full bg-gradient-to-t from-radiola-red to-radiola-blue`></div>
         // <div className="text-radiola-light-grey/25">{React.string("DIRECTIONS")}</div>
       </li>
 
       <li className="relative flex flex-col justify-center flex-1 text-center cursor-pointer group" onClick={(_) => dataDispatch(DataContext.Action.SetSelection(DataContext.Selection.Routes))}>
-        <i className=`fe fe-bookmark ${activeTabIcon(~tab=DataContext.Selection.Routes)} text-[2.75rem]` />
-        <div className=`${activeTabHighlight(~tab=DataContext.Selection.Routes)} group-hover:block absolute bottom-0 left-0 h-2 w-full bg-gradient-to-t from-radiola-red to-radiola-blue`></div>
+        <i className=`fe fe-bookmark ${activeTabIcon(~tab=DataContext.Selection.Routes)} z-10 group-hover:text-radiola-light-grey text-[2.75rem]` />
+        <div className=`${activeTabHighlight(~tab=DataContext.Selection.Routes)} z-0 group-hover:block absolute bottom-0 left-0 h-3 w-full bg-gradient-to-t from-radiola-red to-radiola-blue`></div>
         // <div className="text-radiola-light-grey/25">{React.string("ROUTES")}</div>
       </li>
     </ul>
