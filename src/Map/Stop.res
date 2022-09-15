@@ -2,7 +2,7 @@
 let make = (
   ~stops: array<Common.Stop.t>
 ) => {
-  let (mapState, mapDispatch) = React.useContext(Map.Context.context)
+  let (_, mapDispatch) = React.useContext(Map.Context.context)
 
   // convert coordinate array to Mapbox.position
   let convertCoordinate = (~lat: float, ~lon: float) => {

@@ -6,12 +6,12 @@ let make = () => {
   let (dataState, dataDispatch) = React.useContext(DataContext.context)
 
   // * ------- COMPONENT FOCUS LISTENERS ------- 
-  let originHandleInsideClick = (evt: ReactEvent.Mouse.t) => {
+  let originHandleInsideClick = (_: ReactEvent.Mouse.t) => {
     Js.log("inside - origin bar")
     dataDispatch(DataContext.Action.SetFocus(DataContext.Focus.DirectionsMenu("origin")))
   }
 
-  let destinationHandleInsideClieck = (evt: ReactEvent.Mouse.t) => {
+  let destinationHandleInsideClieck = (_: ReactEvent.Mouse.t) => {
     Js.log("inside - destination bar")
     dataDispatch(DataContext.Action.SetFocus(DataContext.Focus.DirectionsMenu("destination")))
   }
@@ -53,7 +53,7 @@ let make = () => {
   let getPlanData = (~parameters) => Data.getPlan(~parameters, ~callback=callbackPlan, ~errorHandler=planErrorHandler)
 
   // * Geocode upon submit - auto accept closest possible match
-  let handleSubmit = (evt: ReactEvent.Mouse.t) => {
+  let handleSubmit = (_: ReactEvent.Mouse.t) => {
     switch (state.origin, state.originPosition) {
     | ("", _) => ()
     | (_, Some(_)) => ()

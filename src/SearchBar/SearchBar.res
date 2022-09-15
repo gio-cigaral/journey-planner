@@ -4,7 +4,7 @@ let make = () => {
   let (state, dispatch) = React.useContext(SearchBarContext.context)
   let (dataState, dataDispatch) = React.useContext(DataContext.context)
 
-  let handleInsideClick = (evt: ReactEvent.Mouse.t) => {
+  let handleInsideClick = (_: ReactEvent.Mouse.t) => {
     Js.log("inside - search bar")
     dataDispatch(DataContext.Action.SetFocus(DataContext.Focus.Search))
   }

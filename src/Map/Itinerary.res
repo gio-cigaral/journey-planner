@@ -10,8 +10,8 @@ type routeLine = {
 let make = (
   ~itinerary: Common.Itinerary.t
 ) => {
-  let (dataState, _) = React.useContext(DataContext.context)
-  let (_, mapDispatch) = React.useContext(Map.Context.context)
+  let (_, _) = React.useContext(DataContext.context)
+  let (_, _) = React.useContext(Map.Context.context)
   let (lines, setLines) = React.useState(_ => [])
 
   // React.useEffect0(() => {

@@ -3,15 +3,15 @@ let make = () => {
   let appRef = React.useRef(Js.Nullable.null)
   let (dataState, dataDispatch) = React.useContext(DataContext.context)
 
-  let errorHandler = a => Js.log(a)
-  let callback = a => dataDispatch(DataContext.Action.SetStops(a))
-  let getStopData = () => Data.getStops(~callback, ~errorHandler)
+  // let errorHandler = a => Js.log(a)
+  // let callback = a => dataDispatch(DataContext.Action.SetStops(a))
+  // let getStopData = () => Data.getStops(~callback, ~errorHandler)
 
-  React.useEffect0(() => {
-    // TODO: process stops
-    // getStopData()
-    None
-  })
+  // React.useEffect0(() => {
+  //   // TODO: process stops
+  //   getStopData()
+  //   None
+  // })
 
   React.useEffect2(() => {
     let handleClick = (evt) => {
