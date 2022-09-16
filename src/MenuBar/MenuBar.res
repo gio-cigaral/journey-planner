@@ -2,10 +2,9 @@
 let make = () => {
   let (dataState, dataDispatch) = React.useContext(DataContext.context)
 
-  // let onClick = (_, selection: DataContext.Selection.t) => {
-  //   dataDispatch(DataContext.Action.SetSelection(selection))
-  //   ()
-  // }
+  let onClickTab = (selection: DataContext.Selection.t) => {
+    dataDispatch(DataContext.Action.SetSelection(selection))
+  }
 
   // Styling for mobile
   let activeFooter = 
@@ -43,21 +42,21 @@ let make = () => {
   <div id="footer" className=`${activeFooter} lg:ml-7 lg:mr-7 lg:h-96 shadow-md`>
     <ul id="nav-bar" className="flex flex-row justify-evenly w-full h-14 overflow-hidden rounded-t-xl bg-radiola-blue">
       // TODO: only show label for large screens
-      <li className="relative flex flex-col justify-center flex-1 text-center cursor-pointer group" onClick={(_) => dataDispatch(DataContext.Action.SetSelection(DataContext.Selection.Tracker))}>
-        <i className=`fe fe-radio ${activeTabIcon(~tab=DataContext.Selection.Tracker)} z-10 group-hover:text-radiola-light-grey text-[2.75rem]` />
-        <div className=`${activeTabHighlight(~tab=DataContext.Selection.Tracker)} z-0 group-hover:block absolute bottom-0 left-0 h-3 w-full bg-gradient-to-t from-radiola-red to-radiola-blue`></div>
+      <li className="relative flex flex-col justify-center flex-1 text-center cursor-pointer group" onClick={(_) => onClickTab(Tracker)}>
+        <i className=`fe fe-radio ${activeTabIcon(~tab=Tracker)} z-10 group-hover:text-radiola-light-grey text-[2.75rem]` />
+        <div className=`${activeTabHighlight(~tab=Tracker)} z-0 group-hover:block absolute bottom-0 left-0 h-3 w-full bg-gradient-to-t from-radiola-red to-radiola-blue`></div>
         // <div className="text-radiola-light-grey/25 text-xs">{React.string("TRACKER")}</div>
       </li>
 
-      <li className="relative flex flex-col justify-center flex-1 text-center cursor-pointer group" onClick={(_) => dataDispatch(DataContext.Action.SetSelection(DataContext.Selection.Directions))}>
-        <i className=`fe fe-map-pin ${activeTabIcon(~tab=DataContext.Selection.Directions)} z-10 group-hover:text-radiola-light-grey text-[2.5rem]` />
-        <div className=`${activeTabHighlight(~tab=DataContext.Selection.Directions)} z-0 group-hover:block absolute bottom-0 left-0 h-3 w-full bg-gradient-to-t from-radiola-red to-radiola-blue`></div>
+      <li className="relative flex flex-col justify-center flex-1 text-center cursor-pointer group" onClick={(_) => onClickTab(Directions)}>
+        <i className=`fe fe-map-pin ${activeTabIcon(~tab=Directions)} z-10 group-hover:text-radiola-light-grey text-[2.5rem]` />
+        <div className=`${activeTabHighlight(~tab=Directions)} z-0 group-hover:block absolute bottom-0 left-0 h-3 w-full bg-gradient-to-t from-radiola-red to-radiola-blue`></div>
         // <div className="text-radiola-light-grey/25">{React.string("DIRECTIONS")}</div>
       </li>
 
-      <li className="relative flex flex-col justify-center flex-1 text-center cursor-pointer group" onClick={(_) => dataDispatch(DataContext.Action.SetSelection(DataContext.Selection.Routes))}>
-        <i className=`fe fe-bookmark ${activeTabIcon(~tab=DataContext.Selection.Routes)} z-10 group-hover:text-radiola-light-grey text-[2.75rem]` />
-        <div className=`${activeTabHighlight(~tab=DataContext.Selection.Routes)} z-0 group-hover:block absolute bottom-0 left-0 h-3 w-full bg-gradient-to-t from-radiola-red to-radiola-blue`></div>
+      <li className="relative flex flex-col justify-center flex-1 text-center cursor-pointer group" onClick={(_) => onClickTab(Routes)}>
+        <i className=`fe fe-bookmark ${activeTabIcon(~tab=Routes)} z-10 group-hover:text-radiola-light-grey text-[2.75rem]` />
+        <div className=`${activeTabHighlight(~tab=Routes)} z-0 group-hover:block absolute bottom-0 left-0 h-3 w-full bg-gradient-to-t from-radiola-red to-radiola-blue`></div>
         // <div className="text-radiola-light-grey/25">{React.string("ROUTES")}</div>
       </li>
     </ul>
