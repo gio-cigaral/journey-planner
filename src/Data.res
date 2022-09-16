@@ -32,8 +32,9 @@ let multiDataRetrieval = (~parameterList=[], ~callback, ~errorHandler, ~apiFunct
   |> ignore
 }
 
-let getStops = (~callback, ~errorHandler) =>
+let getStops = (~parameters, ~callback, ~errorHandler) =>
   genericDataRetrieval(
+    ~parameters,
     ~apiFunction=APIFunctions.getStops,
     ~decoder=Decode.toStops,
     ~callback,

@@ -1,6 +1,6 @@
 module Context = Map__Context
 
-let mapboxAccessToken = "pk.eyJ1IjoicmFkaW9sYSIsImEiOiJjbDVnN3VmZ3kxaW5xM2JtdHVhbzgzcW9qIn0.zeCuHBB9ObU6Rdyr6_Z5Vg"
+// let mapboxAccessToken = "pk.eyJ1IjoicmFkaW9sYSIsImEiOiJjbDVnN3VmZ3kxaW5xM2JtdHVhbzgzcW9qIn0.zeCuHBB9ObU6Rdyr6_Z5Vg"
 let mapStyle = "mapbox://styles/mapbox/streets-v9?optimize=true"
 
 let flyTo = (
@@ -42,6 +42,10 @@ let make = (~images: array<image>, ~children) => {
   let ref = React.useRef(Js.Nullable.null)
   let (state, dispatch) = React.useContext(Context.context)
   let (dataState, dataDispatch) = React.useContext(DataContext.context)
+
+  let stopsCallback = (a: array<Common.Stop.t>) => dataDispatch(DataContext.Action.SetStops(a))
+  let stopsErrorHandler = a => Js.log(a)
+  let getStopData = (~parameters) => Data.getStops(~parameters, ~callback=stopsCallback, ~errorHandler=stopsErrorHandler)
 
   // Update Map ref
   React.useEffect0(() => {
@@ -92,6 +96,18 @@ let make = (~images: array<image>, ~children) => {
     -> Mapbox.ViewStateChangeEvent.getViewState
     -> Context.Action.SetDebouncedViewState
     -> dispatch
+
+    switch (state.debouncedViewState.latitude, state.debouncedViewState.longitude) {
+    | (lat, lon) => {
+        let stopParameters = APIFunctions.getStopsParameters(
+          ~lat=state.debouncedViewState.latitude, 
+          ~lon=state.debouncedViewState.longitude,
+          ~radius=2000
+        )
+        getStopData(~parameters=stopParameters)
+      }
+    | _ => ()
+    }
   }
 
   let onClick = (evt: Mapbox.MapLayerMouseEvent.t) => {
@@ -126,7 +142,7 @@ let make = (~images: array<image>, ~children) => {
       interactiveLayerIds=state.interactiveLayerIds
       onClick
       reuseMaps=true
-      mapboxAccessToken
+      mapboxAccessToken=APIFunctions.mapboxAccessToken
       mapStyle
       minPitch=0.0
       maxPitch=0.0
