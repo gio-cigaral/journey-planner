@@ -51,6 +51,7 @@ module Action = {
     | RemoveFocusListener(FocusListener.t)
     | SetSearchLocation(SearchLocation.t)
     | SetStops(array<Common.Stop.t>)
+    // | SetCloseStops(array<Common.Stop.t>)
     | SetPlan(array<Common.TripPlannerResponse.t>)  // TODO: change to option<> once connected to search bars
     | SetActiveItinerary(int)
     | SetViewState(Mapbox.ViewState.t)
@@ -60,9 +61,10 @@ module State = {
   type t = {
     selection: Selection.t,
     focus: Focus.t,
-    focusListeners: array<FocusListener.t>,  // TODO: double check array is the appropriate collection type here (i.e. is it mutable?)
+    focusListeners: array<FocusListener.t>,
     searchLocation: option<SearchLocation.t>,
     stops: option<array<Common.Stop.t>>,
+    // closeStops: option<array<Common.Stop.t>>,
     plan: array<Common.TripPlannerResponse.t>,  // TODO: change to option<> once connected to search bars
     itinerary: option<array<Common.Itinerary.t>>,
     activeItinerary: int,
@@ -76,6 +78,7 @@ let initialState: State.t = {
   focusListeners: [],
   searchLocation: None,
   stops: None,
+  // closeStops: None,
   plan: [], // TODO: change to option<> once connected to search bars
   itinerary: None,
   activeItinerary: 0,

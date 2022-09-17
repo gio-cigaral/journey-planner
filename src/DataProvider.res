@@ -28,6 +28,10 @@ let reducer = (state: State.t, action) => {
     ...state,
     stops: Some(stops)
   }
+  // | Action.SetCloseStops(closeStops) => {
+  //   ...state,
+  //   closeStops: Some(closeStops)
+  // }
   | Action.SetPlan(plan) => {
     ...state,
     plan: plan,

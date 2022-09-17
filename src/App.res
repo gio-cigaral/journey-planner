@@ -3,15 +3,16 @@ let make = () => {
   let appRef = React.useRef(Js.Nullable.null)
   let (dataState, dataDispatch) = React.useContext(DataContext.context)
 
-  // let errorHandler = a => Js.log(a)
-  // let callback = a => dataDispatch(DataContext.Action.SetStops(a))
-  // let getStopData = () => Data.getStops(~callback, ~errorHandler)
+  let errorHandler = a => Js.log(a)
+  let callback = a => dataDispatch(DataContext.Action.SetStops(a))
+  let getStopData = () => Data.getStops(~parameters="", ~callback, ~errorHandler)
 
-  // React.useEffect0(() => {
-  //   // TODO: process stops
-  //   getStopData()
-  //   None
-  // })
+  React.useEffect0(() => {
+    // TODO: process stops
+    getStopData()
+    Js.log("stops loaded")
+    None
+  })
 
   React.useEffect2(() => {
     let handleClick = (evt) => {
@@ -58,8 +59,7 @@ let make = () => {
         <Map images=[{name: "map-pin", url: "/img/person.png"}]>
           {
             switch dataState.stops {
-            | Some(stops) => 
-                <Stop stops=stops />
+            | Some(stops) => <Stop stopsData=stops />
             | None => React.null
             }
           }

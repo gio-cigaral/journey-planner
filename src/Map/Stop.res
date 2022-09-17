@@ -1,8 +1,10 @@
 @react.component
 let make = (
-  ~stops: array<Common.Stop.t>
+  ~stopsData: array<Common.Stop.t>
 ) => {
-  let (_, mapDispatch) = React.useContext(Map.Context.context)
+  let (dataState, _) = React.useContext(DataContext.context)
+  let (mapState, mapDispatch) = React.useContext(Map.Context.context)
+  let (stops, setStops) = React.useState(_ => stopsData)
 
   // convert coordinate array to Mapbox.position
   let convertCoordinate = (~lat: float, ~lon: float) => {
@@ -27,14 +29,35 @@ let make = (
     Some(cleanup)
   })
 
-  // Center map over stop
-  // React.useEffect2(() => {
-  //   switch mapState.ref {
-  //   | Some(map) => Map.flyTo(map, stop.lon, stop.lat, 20)
-  //   | None => ()
-  //   }
-  //   None
-  // }, (mapState.ref, stop))
+  React.useEffect3(() => {
+    let latitude = Mapbox.ViewState.latitudeGet(mapState.debouncedViewState)
+    let longitude = Mapbox.ViewState.longitudeGet(mapState.debouncedViewState)
+    switch (latitude, longitude, dataState.stops) {
+    | (Some(lat), Some(lon), Some(stops)) => {
+        let latOffset = 0.05
+        let lonOffset = 0.05
+        let closeStops = 
+          stops
+          ->Belt.Array.keepMap(stop => {
+            if (
+              stop.lat < lat +. latOffset &&
+              stop.lat > lat -. latOffset &&
+              stop.lon < lon +. lonOffset &&
+              stop.lon > lon -. lonOffset
+            ) {
+              Some(stop)
+            } else {
+              None
+            }
+          })
+
+        setStops(_ => closeStops)
+      }
+    | _ => ()
+    }
+
+    None
+  }, (mapState.debouncedViewState, mapState.loaded, stopsData))
 
   // ? May need to change feature from being specific (i.e. `stop-${stop.id}`) to be more generic and represent feature type (e.g. 'stop')
   let features = 
@@ -50,8 +73,11 @@ let make = (
     stops
     ->Belt.Array.map((stop) => {
       <Mapbox.Layer.Circle
-        id="stop-circle"  // * Display one stop
-        // id=`stop-circle-${stop.id}`  // * Display all stops (NOTE: this leads to an issue with onClick as it needs to match ID added above to ID here)
+        // id="stop-circle"  // * Display one stop
+        id=`stop-circle-${stop.id}`  // * Display all stops 
+        key=`stop-circle-${stop.id}`
+        // ! (NOTE: this leads to an issue with Map.onClick as it needs to match InteractiveLayerID ("stop-circle") to the ID here ("stop-circle-${stop.id}"))
+        // ? unique IDs are required to generate multiple elements 
         paint={Mapbox.Layer.Circle.paint(
           ~circleRadius=Any([Mapbox.Any("interpolate"), Any(["linear"]), Any(["zoom"]), Any(10), Any(1), Any(13), Any(5), Any(20), Any(15)]),
           ~circleColor=Any("#FFFFFF"),

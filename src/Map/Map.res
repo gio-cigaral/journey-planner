@@ -43,10 +43,6 @@ let make = (~images: array<image>, ~children) => {
   let (state, dispatch) = React.useContext(Context.context)
   let (dataState, dataDispatch) = React.useContext(DataContext.context)
 
-  let stopsCallback = (a: array<Common.Stop.t>) => dataDispatch(DataContext.Action.SetStops(a))
-  let stopsErrorHandler = a => Js.log(a)
-  let getStopData = (~parameters) => Data.getStops(~parameters, ~callback=stopsCallback, ~errorHandler=stopsErrorHandler)
-
   // Update Map ref
   React.useEffect0(() => {
     Some(ref)
@@ -97,17 +93,7 @@ let make = (~images: array<image>, ~children) => {
     -> Context.Action.SetDebouncedViewState
     -> dispatch
 
-    switch (state.debouncedViewState.latitude, state.debouncedViewState.longitude) {
-    | (lat, lon) => {
-        let stopParameters = APIFunctions.getStopsParameters(
-          ~lat=state.debouncedViewState.latitude, 
-          ~lon=state.debouncedViewState.longitude,
-          ~radius=2000
-        )
-        getStopData(~parameters=stopParameters)
-      }
-    | _ => ()
-    }
+    // updateStops()
   }
 
   let onClick = (evt: Mapbox.MapLayerMouseEvent.t) => {
@@ -120,13 +106,14 @@ let make = (~images: array<image>, ~children) => {
     | Some(features) => 
         switch Belt.Array.get(features, 0) {
         | Some(feature) =>
+            Js.log(feature)
             switch Mapbox.Feature.featureGet(feature.properties) {
             | Some(id) => Js.log("map clicked on feature: " ++ id)
             | None => Js.log("map clicked - but couldn't find property")
             }
-        | None => Js.log("map clicked - features.size = " ++ Belt.Int.toString(Belt.Array.length(features)))
+        | None => Js.log(`map clicked - features empty (size=${Belt.Int.toString(Belt.Array.length(features))})`)
         }
-    | None => Js.log("map clicked - no features")
+    | None => Js.log("map clicked - no features (NONE)")
     }
   }
 

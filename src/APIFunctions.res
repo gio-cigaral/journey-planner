@@ -4,7 +4,7 @@ let getBackendData = (url) => {
   Fetch.fetchWithInit("http://localhost:8080" ++ url, Fetch.RequestInit.make(~method_=Get, ~headers, ()))
 }
 
-let getStopsParameters = (~lat: float, ~lon: float, ~radius: float) => {
+let getStopsParameters = (~lat: Mapbox.latitude, ~lon: Mapbox.longitude, ~radius: float) => {
   let lat = `lat=${Belt.Float.toString(lat)}`
   let lon = `&lon=${Belt.Float.toString(lon)}`
   let radius = `&radius=${Belt.Float.toString(radius)}`
