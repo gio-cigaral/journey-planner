@@ -16,16 +16,28 @@ let make = (
   }
 
   React.useEffect0(() => {
-    "stop-circle"
-    -> Map__Context.Action.AddInteractiveLayerId
-    -> mapDispatch
+    let stopLayerIds = 
+      stops
+      ->Belt.Array.map((stop) => {
+        `stop-circle-${stop.id}`
+      })
+
+    stopLayerIds
+    ->Belt.Array.forEach((id) => {
+      id
+      -> Map__Context.Action.AddInteractiveLayerId
+      -> mapDispatch
+    })
 
     let cleanup = () => {
-      "stop-circle"
-      -> Map__Context.Action.RemoveInteractiveLayerId
-      -> mapDispatch
+      stopLayerIds
+      ->Belt.Array.forEach((id) => {
+        id
+        -> Map__Context.Action.RemoveInteractiveLayerId
+        -> mapDispatch
+      })
     }
-
+    
     Some(cleanup)
   })
 
@@ -65,7 +77,7 @@ let make = (
     ->Belt.Array.map((stop) => {
       Mapbox.Feature.make(
         ~geometry=Mapbox.Geometry.Point.make(~position=convertCoordinate(~lat=stop.lat, ~lon=stop.lon)),
-        ~properties=Mapbox.Feature.properties(~id=stop.id, ~feature=`stop-${stop.id}`, ()),
+        ~properties=Mapbox.Feature.properties(~id=stop.id, ~feature=`stop-circle-${stop.id}`, ()),
       )
     })
 
@@ -85,7 +97,7 @@ let make = (
           ~circleStrokeWidth=2,
           ()
         )}
-        filter=Any([Mapbox.Any("=="), Any(["get", "feature"]), Any(`stop-${stop.id}`)])
+        filter=Any([Mapbox.Any("=="), Any(["get", "feature"]), Any(`stop-circle-${stop.id}`)])
       />
     })
 
