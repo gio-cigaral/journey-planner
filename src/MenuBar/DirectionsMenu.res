@@ -48,7 +48,11 @@ let make = () => {
   let getCoordinates = (~parameters, ~callback) => Data.getCoordinates(~parameters, ~callback, ~errorHandler=coordinatesErrorHandler)
 
   // * ------- PLAN API CALL  ------- 
-  let callbackPlan = a => dataDispatch(DataContext.Action.SetPlan([a]))
+  let callbackPlan = a => {
+    Js.log("plan found")
+    Js.log(a)
+    dataDispatch(DataContext.Action.SetPlan([a]))
+  }
   let planErrorHandler = a => Js.log(a)
   let getPlanData = (~parameters) => Data.getPlan(~parameters, ~callback=callbackPlan, ~errorHandler=planErrorHandler)
 
@@ -100,6 +104,8 @@ let make = () => {
   }
 
   let handleOriginChosenSuggestion = (item: Common.GeocodeResponse.feature) => {
+    Js.log("chosen origin - ")
+    Js.log(item)
     dispatch(DirectionsMenuContext.Action.SetOrigin(item.placeName))
     dispatch(DirectionsMenuContext.Action.SetOriginPosition(item))
   }
@@ -144,6 +150,8 @@ let make = () => {
   }
 
   let handleDestinationChosenSuggestion = (item: Common.GeocodeResponse.feature) => {
+    Js.log("chosen destination - ")
+    Js.log(item)
     dispatch(DirectionsMenuContext.Action.SetDestination(item.placeName))
     dispatch(DirectionsMenuContext.Action.SetDestinationPosition(item))
   }

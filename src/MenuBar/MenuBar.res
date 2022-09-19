@@ -10,6 +10,12 @@ let make = () => {
   let activeFooter = 
     switch dataState.selection {
     | Empty => "h-14"
+    | Directions(subMenu) => {
+        switch subMenu {
+        | Details => "h-[40rem] lg:h-[60rem]"
+        | _ => "h-96"
+        }
+      }
     | _ => "h-96"
     }
 
@@ -22,25 +28,57 @@ let make = () => {
 
   let activeTabIcon: (~tab: DataContext.Selection.t) => string =
     (~tab: DataContext.Selection.t) => {
-      if (tab === dataState.selection) {
-        "text-radiola-light-grey"
-      } else {
-        "text-radiola-light-grey/25"
+      switch dataState.selection {
+      | Tracker => {
+          switch tab {
+          | Tracker => "text-radiola-light-grey"
+          | _ => "text-radiola-light-grey/25"
+          }
+        }
+      | Directions(_) => {
+          switch tab {
+          | Directions(_) => "text-radiola-light-grey"
+          | _ => "text-radiola-light-grey/25"
+          }
+        }
+      | Routes => {
+          switch tab {
+          | Routes => "text-radiola-light-grey"
+          | _ => "text-radiola-light-grey/25"
+          }
+        }
+      | _ => "text-radiola-light-grey/25"
       }
     }
 
   let activeTabHighlight: (~tab: DataContext.Selection.t) => string = 
     (~tab: DataContext.Selection.t) => {
-      if (tab === dataState.selection) {
-        "block"
-      } else {
-        "hidden"
+      switch dataState.selection {
+      | Tracker => {
+          switch tab {
+          | Tracker => "block"
+          | _ => "hidden"
+          }
+        }
+      | Directions(_) => {
+          switch tab {
+          | Directions(_) => "block"
+          | _ => "hidden"
+          }
+        }
+      | Routes => {
+          switch tab {
+          | Routes => "block"
+          | _ => "hidden"
+          }
+        }
+      | _ => "hidden"
       }
     }
   
   // TODO: adjust "footer" element height for large screens - starting height too low?
-  <div id="footer" className=`${activeFooter} lg:ml-7 lg:mr-7 lg:h-96 shadow-md`>
-    <ul id="nav-bar" className="flex flex-row justify-evenly w-full h-14 overflow-hidden rounded-t-xl bg-radiola-blue">
+  <div id="footer" className=`flex flex-col ${activeFooter} lg:ml-7 lg:mr-7 shadow-md`>
+    <ul id="nav-bar" className="flex flex-row justify-evenly grow-0 w-full h-14 overflow-hidden rounded-t-xl bg-radiola-blue">
       // TODO: only show label for large screens
       <li className="relative flex flex-col justify-center flex-1 text-center cursor-pointer group" onClick={(_) => onClickTab(Tracker)}>
         <i className=`fe fe-radio ${activeTabIcon(~tab=Tracker)} z-10 group-hover:text-radiola-light-grey text-[2.75rem]` />
@@ -48,9 +86,9 @@ let make = () => {
         // <div className="text-radiola-light-grey/25 text-xs">{React.string("TRACKER")}</div>
       </li>
 
-      <li className="relative flex flex-col justify-center flex-1 text-center cursor-pointer group" onClick={(_) => onClickTab(Directions)}>
-        <i className=`fe fe-map-pin ${activeTabIcon(~tab=Directions)} z-10 group-hover:text-radiola-light-grey text-[2.5rem]` />
-        <div className=`${activeTabHighlight(~tab=Directions)} z-0 group-hover:block absolute bottom-0 left-0 h-3 w-full bg-gradient-to-t from-radiola-red to-radiola-blue`></div>
+      <li className="relative flex flex-col justify-center flex-1 text-center cursor-pointer group" onClick={(_) => onClickTab(Directions(Details))}>
+        <i className=`fe fe-map-pin ${activeTabIcon(~tab=Directions(Input))} z-10 group-hover:text-radiola-light-grey text-[2.5rem]` />
+        <div className=`${activeTabHighlight(~tab=Directions(Input))} z-0 group-hover:block absolute bottom-0 left-0 h-3 w-full bg-gradient-to-t from-radiola-red to-radiola-blue`></div>
         // <div className="text-radiola-light-grey/25">{React.string("DIRECTIONS")}</div>
       </li>
 
@@ -62,12 +100,17 @@ let make = () => {
     </ul>
 
     <DirectionsMenuContext>
-      <div id="content" className=`${activeContent} bg-radiola-light-grey lg:block lg:h-[20.5rem]`>
+      <div id="content" className=`${activeContent} bg-radiola-light-grey lg:block lg:h-[20.5rem] grow`>
         // TODO: create react element for each content type
         {
           switch dataState.selection {
           | Tracker => React.null
-          | Directions => <DirectionsMenu /> 
+          | Directions(subMenu) => {
+              switch subMenu {
+              | Input => <DirectionsMenu />
+              | Details => React.null
+              }
+            } 
           | Routes => React.null
           | Empty => React.null
           }

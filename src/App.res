@@ -8,9 +8,9 @@ let make = () => {
   let getStopData = () => Data.getStops(~parameters="", ~callback, ~errorHandler)
 
   React.useEffect0(() => {
-    // TODO: process stops
     getStopData()
     Js.log("stops loaded")
+    
     None
   })
 

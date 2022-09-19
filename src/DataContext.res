@@ -1,7 +1,11 @@
 module Selection = {
+  type directionsSubMenu =
+    | Input
+    | Details
+
   type t = 
     | Tracker
-    | Directions
+    | Directions(directionsSubMenu)
     | Routes
     | Empty
 }
@@ -73,7 +77,7 @@ module State = {
 }
 
 let initialState: State.t = {
-  selection: Directions,
+  selection: Directions(Input),
   focus: Empty,
   focusListeners: [],
   searchLocation: None,
