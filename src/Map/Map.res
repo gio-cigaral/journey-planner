@@ -70,6 +70,7 @@ let make = (~images: array<image>, ~children) => {
     None
   }, [dataState.viewState])
 
+  // TODO: move search flyTo logic to SearchBar.res
   React.useEffect2(() => {
     switch dataState.searchLocation {
     | Some(location) => 
@@ -92,8 +93,6 @@ let make = (~images: array<image>, ~children) => {
     -> Mapbox.ViewStateChangeEvent.getViewState
     -> Context.Action.SetDebouncedViewState
     -> dispatch
-
-    // updateStops()
   }
 
   let onClick = (evt: Mapbox.MapLayerMouseEvent.t) => {
@@ -107,7 +106,7 @@ let make = (~images: array<image>, ~children) => {
         switch Belt.Array.get(features, 0) {
         | Some(feature) =>
             Js.log(feature)
-            switch Mapbox.Feature.featureGet(feature.properties) {
+            switch Mapbox.Feature.idGet(feature.properties) {
             | Some(id) => Js.log("map clicked on feature: " ++ id)
             | None => Js.log("map clicked - but couldn't find property")
             }
