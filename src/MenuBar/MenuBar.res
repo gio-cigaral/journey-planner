@@ -115,7 +115,15 @@ let make = () => {
           | Directions(subMenu) => {
               switch subMenu {
               | Input => <DirectionInputMenu />
-              | Details => React.null
+              | Details => {
+                  switch dataState.plan {
+                  | Some(_) => <DirectionDetailsMenu />
+                  | None => {
+                      dataDispatch(DataContext.Action.SetSelection(Directions(Input)))
+                      <DirectionInputMenu />
+                    }
+                  }
+                }
               }
             } 
           | Routes => React.null
