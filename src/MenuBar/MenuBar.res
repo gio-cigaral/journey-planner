@@ -6,6 +6,13 @@ let make = () => {
     dataDispatch(DataContext.Action.SetSelection(selection))
   }
 
+  let onClickDirections = () => {
+    switch dataState.plan {
+    | Some(_) => onClickTab(Directions(Details))
+    | None => onClickTab(Directions(Input))
+    }
+  }
+
   // Styling for mobile
   let activeFooter = 
     switch dataState.selection {
@@ -86,7 +93,7 @@ let make = () => {
         // <div className="text-radiola-light-grey/25 text-xs">{React.string("TRACKER")}</div>
       </li>
 
-      <li className="relative flex flex-col justify-center flex-1 text-center cursor-pointer group" onClick={(_) => onClickTab(Directions(Details))}>
+      <li className="relative flex flex-col justify-center flex-1 text-center cursor-pointer group" onClick={(_) => onClickDirections()}>
         <i className=`fe fe-map-pin ${activeTabIcon(~tab=Directions(Input))} z-10 group-hover:text-radiola-light-grey text-[2.5rem]` />
         <div className=`${activeTabHighlight(~tab=Directions(Input))} z-0 group-hover:block absolute bottom-0 left-0 h-3 w-full bg-gradient-to-t from-radiola-red to-radiola-blue`></div>
         // <div className="text-radiola-light-grey/25">{React.string("DIRECTIONS")}</div>
@@ -99,7 +106,7 @@ let make = () => {
       </li>
     </ul>
 
-    <DirectionsMenuContext>
+    <DirectionMenuContext>
       <div id="content" className=`${activeContent} bg-radiola-light-grey lg:block lg:h-[20.5rem] grow`>
         // TODO: create react element for each content type
         {
@@ -107,7 +114,7 @@ let make = () => {
           | Tracker => React.null
           | Directions(subMenu) => {
               switch subMenu {
-              | Input => <DirectionsMenu />
+              | Input => <DirectionInputMenu />
               | Details => React.null
               }
             } 
@@ -116,6 +123,6 @@ let make = () => {
           }
         }
       </div>
-    </DirectionsMenuContext>
+    </DirectionMenuContext>
   </div>
 }

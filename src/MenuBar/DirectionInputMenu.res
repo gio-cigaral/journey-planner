@@ -2,7 +2,7 @@
 let make = () => {
   let originBarRef = React.useRef(Js.Nullable.null)
   let destinationBarRef = React.useRef(Js.Nullable.null)
-  let (state, dispatch) = React.useContext(DirectionsMenuContext.context)
+  let (state, dispatch) = React.useContext(DirectionMenuContext.context)
   let (dataState, dataDispatch) = React.useContext(DataContext.context)
 
   // * ------- COMPONENT FOCUS LISTENERS ------- 
@@ -51,7 +51,8 @@ let make = () => {
   let callbackPlan = a => {
     Js.log("plan found")
     Js.log(a)
-    dataDispatch(DataContext.Action.SetPlan([a]))
+    dataDispatch(DataContext.Action.SetPlan(a))
+    dataDispatch(DataContext.Action.SetSelection(Directions(Details)))
   }
   let planErrorHandler = a => Js.log(a)
   let getPlanData = (~parameters) => Data.getPlan(~parameters, ~callback=callbackPlan, ~errorHandler=planErrorHandler)
@@ -76,7 +77,7 @@ let make = () => {
       }
     }
 
-    // Search for itineraries based on origin and destination positions
+    // * Search for itineraries based on origin and destination positions
     switch (state.originPosition, state.destinationPosition) {
     | (Some(origin), Some(destination)) => {
         let planParameters = 
@@ -97,7 +98,7 @@ let make = () => {
   let handleOriginChange = (evt: ReactEvent.Form.t) => {
     let search = (evt->ReactEvent.Form.target)["value"]
     let parameters = APIFunctions.getCoordinatesParameters(~location=search)
-    let callback = (a: Common.GeocodeResponse.t) => dispatch(DirectionsMenuContext.Action.SetOriginAutocomplete(a.features))
+    let callback = (a: Common.GeocodeResponse.t) => dispatch(DirectionMenuContext.Action.SetOriginAutocomplete(a.features))
 
     dispatch(SetOrigin(search))
     getCoordinates(~parameters, ~callback)
@@ -106,8 +107,8 @@ let make = () => {
   let handleOriginChosenSuggestion = (item: Common.GeocodeResponse.feature) => {
     Js.log("chosen origin - ")
     Js.log(item)
-    dispatch(DirectionsMenuContext.Action.SetOrigin(item.placeName))
-    dispatch(DirectionsMenuContext.Action.SetOriginPosition(item))
+    dispatch(DirectionMenuContext.Action.SetOrigin(item.placeName))
+    dispatch(DirectionMenuContext.Action.SetOriginPosition(item))
   }
 
   let originAutocompleteElements = 
@@ -143,7 +144,7 @@ let make = () => {
   let handleDestinationChange = (evt: ReactEvent.Form.t) => {
     let search = (evt->ReactEvent.Form.target)["value"]
     let parameters = APIFunctions.getCoordinatesParameters(~location=search)
-    let callback = (a: Common.GeocodeResponse.t) => dispatch(DirectionsMenuContext.Action.SetDestinationAutocomplete(a.features))
+    let callback = (a: Common.GeocodeResponse.t) => dispatch(DirectionMenuContext.Action.SetDestinationAutocomplete(a.features))
 
     dispatch(SetDestination(search))
     getCoordinates(~parameters, ~callback)
@@ -152,8 +153,8 @@ let make = () => {
   let handleDestinationChosenSuggestion = (item: Common.GeocodeResponse.feature) => {
     Js.log("chosen destination - ")
     Js.log(item)
-    dispatch(DirectionsMenuContext.Action.SetDestination(item.placeName))
-    dispatch(DirectionsMenuContext.Action.SetDestinationPosition(item))
+    dispatch(DirectionMenuContext.Action.SetDestination(item.placeName))
+    dispatch(DirectionMenuContext.Action.SetDestinationPosition(item))
   }
 
   let destinationAutocompleteElements = 
