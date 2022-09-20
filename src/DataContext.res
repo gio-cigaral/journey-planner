@@ -56,7 +56,7 @@ module Action = {
     | SetSearchLocation(SearchLocation.t)
     | SetStops(array<Common.Stop.t>)
     // | SetCloseStops(array<Common.Stop.t>)
-    | SetPlan(Common.TripPlannerResponse.t)
+    | SetPlan(option<Common.TripPlannerResponse.t>)
     | SetActiveItinerary(int)
     | SetViewState(Mapbox.ViewState.t)
 }

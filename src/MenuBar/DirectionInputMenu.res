@@ -51,7 +51,8 @@ let make = () => {
   let callbackPlan = a => {
     Js.log("plan found")
     Js.log(a)
-    dataDispatch(DataContext.Action.SetPlan(a))
+    dataDispatch(DataContext.Action.SetPlan(Some(a)))
+    dataDispatch(DataContext.Action.SetActiveItinerary(0))
     dataDispatch(DataContext.Action.SetSelection(Directions(Details)))
   }
   let planErrorHandler = a => Js.log(a)
@@ -86,7 +87,7 @@ let make = () => {
             ~destination=destination.center,
             ~time=Util.getCurrentTime(),
             ~date=Util.getCurrentDate()
-          )        
+          )
         getPlanData(~parameters=planParameters)
       }
     | _ => ()

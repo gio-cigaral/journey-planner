@@ -117,7 +117,7 @@ let make = () => {
               | Input => <DirectionInputMenu />
               | Details => {
                   switch dataState.plan {
-                  | Some(_) => <DirectionDetailsMenu />
+                  | Some(plan) => <DirectionDetailsMenu planData={plan} />
                   | None => {
                       dataDispatch(DataContext.Action.SetSelection(Directions(Input)))
                       <DirectionInputMenu />

@@ -34,8 +34,13 @@ let reducer = (state: State.t, action) => {
   // }
   | Action.SetPlan(plan) => {
     ...state,
-    plan: Some(plan),
-    itinerary: Some(plan.plan.itineraries)
+    // plan: Some(plan),
+    plan: plan,
+    itinerary: 
+      switch plan {
+      | Some(p) => Some(p.plan.itineraries)
+      | None => None
+      }
   }
   | Action.SetActiveItinerary(activeItinerary) => {
     ...state,
