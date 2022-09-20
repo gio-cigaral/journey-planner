@@ -5,7 +5,7 @@ let make = (
   let (dataState, dataDispatch) = React.useContext(DataContext.context)
   let (directionState, _) = React.useContext(DirectionMenuContext.context)
 
-  let (plan, setPlan) = React.useState(_ => planData)
+  let (_, setPlan) = React.useState(_ => planData)
   let (itineraries, setItineraries) = React.useState(_ => planData.plan.itineraries)
   let (activeItinerary, setActiveItinerary) = React.useState(_ => planData.plan.itineraries[dataState.activeItinerary])
 
