@@ -23,12 +23,20 @@ let make = (
     None
   }, [dataState.activeItinerary])
 
+  let activeItineraryButton = (~index) => {
+    if (index === dataState.activeItinerary) {
+      "bg-gray-600"
+    } else {
+      "bg-gray-300"
+    }
+  }
+
   let itinerarySwitchButtons = 
     itineraries
     ->Belt.Array.mapWithIndex((index, _) => {
       <li
         key=`itinerary-button-${Belt.Int.toString(index)}`
-        className="flex flex-col grow justify-center h-full text-center text-radiola-light-grey cursor-pointer hover:bg-gray-600"
+        className=`flex flex-col grow justify-center h-full text-center text-radiola-light-grey cursor-pointer ${activeItineraryButton(~index)} hover:bg-gray-600`
         onClick={_ => dataDispatch(DataContext.Action.SetActiveItinerary(index))}
       >
         {React.string(Belt.Int.toString(index))}
@@ -56,20 +64,42 @@ let make = (
       </div>
     </ul>
 
-    <div id="details-content">
-      {React.string("From: " ++ directionState.origin)}
-      <br />
-      {React.string("To: " ++ directionState.destination)}
-      <br />
-      {React.string("Leave: " ++ switch activeItinerary.startTime {
-        | Some(time) => Js.Date.toUTCString(Js.Date.fromFloat(Belt.Int.toFloat(time)))
-        | None => "00:00"
-      })}
-      <br />
-      {React.string("Arrive: " ++ switch activeItinerary.endTime {
-        | Some(time) => Js.Date.toUTCString(Js.Date.fromFloat(Belt.Int.toFloat(time)))
-        | None => "00:00"
-      })}
+    <div id="details-content" className="p-4">
+      <div className="truncate pb-2">
+        <b>{React.string("From: ")}</b>
+        {React.string(directionState.origin)}
+      </div>
+
+      <div className="truncate pb-2">
+        <b>{React.string("To: ")}</b>
+        {React.string(directionState.destination)}
+      </div>
+
+      <div className="flex flex-row justify-around pb-2">
+        <div>
+          <b>{React.string("Leave: ")}</b>
+          {
+            React.string(switch activeItinerary.startTime {
+              | Some(time) => Util.getReadableTime(~time=Belt.Int.toFloat(time))
+              | None => "N/A"
+              })
+          }
+        </div>
+
+        <div>
+          <b>{React.string("Arrive: ")}</b>
+          {
+            React.string(switch activeItinerary.endTime {
+              | Some(time) => Util.getReadableTime(~time=Belt.Int.toFloat(time))
+              | None => "N/A"
+              })
+          }
+        </div>
+      </div>
+
+      <hr />
+
+      
     </div>
   </div>
 }
