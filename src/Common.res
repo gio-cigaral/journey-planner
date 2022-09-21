@@ -34,7 +34,26 @@ module WalkStep = {
   type t = {
     distance: float,
     relativeDirection: option<string>,
-    streetName: option<string>
+    streetName: option<string>,
+    absoluteDirection: option<string>
+  }
+
+  let toReadableInstruction = (~step: t) => {
+    let absoluteDirection = 
+      switch step.absoluteDirection {
+      | Some(absoluteDirection) => " heading " ++ absoluteDirection
+      | None => ""
+      }
+
+    switch (step.relativeDirection, step.streetName) {
+    | (Some(relativeDirection), Some(streetName)) => {
+        switch relativeDirection {
+        | "DEPART" => relativeDirection ++ " on " ++ streetName ++ absoluteDirection ++ ", " ++ Belt.Float.toString(step.distance)
+        | _ => relativeDirection ++ " on to " ++ streetName ++ ", " ++ Belt.Float.toString(step.distance)
+        }
+      }
+    | (_, _) => ""
+    }
   }
 }
 

@@ -40,7 +40,8 @@ module Plan = {
     {
       distance: json |> field("distance", Json.Decode.float),
       relativeDirection: json |> optional(field("relativeDirection", Json.Decode.string)),
-      streetName: json |> optional(field("streetName", Json.Decode.string))
+      streetName: json |> optional(field("streetName", Json.Decode.string)),
+      absoluteDirection: json |> optional(field("absoluteDirection", Json.Decode.string))
     }
   }
 
