@@ -30,11 +30,13 @@ module EncodedPolylineBean = {
   }
 }
 
-// module WalkStep = {
-//   type t = {
-
-//   }
-// }
+module WalkStep = {
+  type t = {
+    distance: float,
+    relativeDirection: option<string>,
+    streetName: option<string>
+  }
+}
 
 module Leg = {
   // TODO: Implement steps: ApiWalkStep
@@ -59,7 +61,7 @@ module Leg = {
     to: option<Place.t>,
     intermediateStops: option<Place.t>,
     legGeometry: option<EncodedPolylineBean.t>,
-    // steps: option<array<walkStep>>,
+    steps: option<array<WalkStep.t>>,
     routeShortName: option<string>,
     routeLongName: option<string>,
     duration: float

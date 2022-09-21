@@ -35,6 +35,15 @@ module Plan = {
     }
   }
 
+  let walkStepInfo = (json): Common.WalkStep.t => {
+    open Json.Decode
+    {
+      distance: json |> field("distance", Json.Decode.float),
+      relativeDirection: json |> optional(field("relativeDirection", Json.Decode.string)),
+      streetName: json |> optional(field("streetName", Json.Decode.string))
+    }
+  }
+
   let legInfo = (json): Common.Leg.t => {
     open Json.Decode
     {
@@ -57,7 +66,7 @@ module Plan = {
       to: json |> optional(field("to", placeInfo)),
       intermediateStops: json |> optional(field("intermediateStops", placeInfo)),
       legGeometry: json |> optional(field("legGeometry", encodedPolylineBeanInfo)),
-      // steps: json |> optional(field("steps", Json.Decode.array(walkStepInfo))),
+      steps: json |> optional(field("steps", Json.Decode.array(walkStepInfo))),
       routeShortName: json |> optional(field("routeShortName", Json.Decode.string)),
       routeLongName: json |> optional(field("routeLongName", Json.Decode.string)),
       duration: json |> field("duration", Json.Decode.float)

@@ -14,6 +14,8 @@ let getStopsParameters = (~lat: Mapbox.latitude, ~lon: Mapbox.longitude, ~radius
 }
 let getStops = (parameters) => getBackendData("/otp/routers/default/index/stops?" ++ parameters)
 
+// ? There may be an error in how the 'fromPlace', 'toPlace', 'time', and 'mode' parameters are encoded
+// ? some requests occassionally return a HTTP404 error alongside 1 valid route
 let getPlanParameters = (~origin: array<float>, ~destination: array<float>, ~time: string, ~date: string) => {
   let from = `fromPlace=${Belt.Float.toString(origin[1])},${Belt.Float.toString(origin[0])}`
   let to = `&toPlace=${Belt.Float.toString(destination[1])},${Belt.Float.toString(destination[0])}`
@@ -35,7 +37,11 @@ let getMapboxData = (url) => {
 }
 
 let getCoordinatesParameters = (~location: string) => {
-  let search = `${location}.json?country=nz&proximity=ip&types=place,postcode,address,poi&access_token=${mapboxAccessToken}`
-  Js.Global.encodeURI(search)
+  let search = `${location}.json?`
+  let parameters = "country=nz&proximity=ip&types=place,postcode,address,poi"
+  let key = `&access_token=${mapboxAccessToken}`
+  let request = search ++ parameters ++ key
+  
+  Js.Global.encodeURI(request)
 }
 let getCoordinates = (parameters) => getMapboxData("/geocoding/v5/mapbox.places/" ++ parameters)
