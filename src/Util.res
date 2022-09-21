@@ -23,6 +23,14 @@ let getCurrentDate = () => {
   Js.String.replaceByRe(re, "-", Js.Date.toLocaleDateString(date))
 }
 
+let mToKm = (~distance: float) => {
+  distance /. 1000.0
+}
+
+let sToMin = (~time: float) => {
+  time /. 60.0
+}
+
 // React
 let emptyFocus = (dispatch) => {
   Js.log("focus - empty")

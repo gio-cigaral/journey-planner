@@ -42,6 +42,39 @@ let make = (
         {React.string(Belt.Int.toString(index))}
       </li>
     })
+
+  let legElements = 
+    switch activeItinerary.legs {
+    | Some(legs) => {
+        legs
+        ->Belt.Array.mapWithIndex((index, leg) => {
+          let mode = 
+            switch leg.mode {
+            | Some(mode) => mode
+            | None => ""
+            }
+          let distance = 
+            switch leg.distance {
+            | Some(distance) => Js.Float.toFixedWithPrecision(Util.mToKm(~distance), ~digits=2)
+            | None => ""
+            }
+          let duration = Js.Float.toFixedWithPrecision(Util.sToMin(~time=leg.duration), ~digits=1)
+
+          // TODO
+          let walkSteps = 
+            switch leg.steps {
+            | Some(steps) => [React.null]
+            | None => [React.null]
+            }
+
+          <div key=`leg-${Belt.Int.toString(index)}`>
+            <b>{React.string(mode ++ " ")}</b>
+            {React.string(distance ++ " km, " ++ duration ++ " mins")}
+          </div>
+        })
+      }
+    | None => [React.null]
+    }
   
   <div>
     <ul id="details-header" className="flex flex-row justify-evenly w-full h-7 overflow-hidden bg-gray-300">
@@ -97,9 +130,20 @@ let make = (
         </div>
       </div>
 
-      <hr />
+      <hr className="pb-2" />
 
-      
+      <div className="pb-2 text-xl">
+        <b>{React.string("STEPS")}</b>
+      </div>
+
+      // TODO: add class to "steps" div to allow scrolling
+      <div id="step-details">
+        // For each leg show: [mode] [distance] [duration]
+        {
+          React.array(legElements)
+        }
+        // IF leg has steps show: [relativeDirection] on to [streetName] [distance]
+      </div>
     </div>
   </div>
 }
