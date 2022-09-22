@@ -107,6 +107,7 @@ let make = () => {
     </ul>
 
     <DirectionMenuContext>
+      // TODO: problem with 'grow' overflowing the page
       <div id="content" className=`${activeContent} bg-radiola-light-grey lg:block lg:h-[20.5rem] grow`>
         // TODO: create react element for each content type
         {

@@ -43,6 +43,17 @@ let make = (
       </li>
     })
 
+  let stepsElements = (~steps: array<Common.WalkStep.t>) => {
+    steps
+    ->Belt.Array.mapWithIndex((index, step) => {
+      let instruction = Common.WalkStep.toReadableInstruction(~step)
+
+      <div className="pb-1">
+        {React.string(instruction)}
+      </div>
+    })
+  }
+
   let legElements = 
     switch activeItinerary.legs {
     | Some(legs) => {
@@ -63,13 +74,19 @@ let make = (
           // TODO
           let walkSteps = 
             switch leg.steps {
-            | Some(steps) => [React.null]
+            | Some(steps) => stepsElements(~steps)
             | None => [React.null]
             }
 
           <div key=`leg-${Belt.Int.toString(index)}`>
             <b>{React.string(mode ++ " ")}</b>
             {React.string(distance ++ " km, " ++ duration ++ " mins")}
+
+            <div className="pl-4">
+            {
+              React.array(walkSteps)
+            }
+            </div>
           </div>
         })
       }

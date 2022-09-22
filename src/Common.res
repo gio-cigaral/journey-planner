@@ -58,7 +58,6 @@ module WalkStep = {
 }
 
 module Leg = {
-  // TODO: Implement steps: ApiWalkStep
   // http://dev.opentripplanner.org/apidoc/2.0.0/json_ApiWalkStep.html
   type t = {
     startTime: option<int>,
