@@ -19,7 +19,7 @@ let make = () => {
     | Empty => "h-14"
     | Directions(subMenu) => {
         switch subMenu {
-        | Details => "h-[40rem] lg:h-[60rem]"
+        | Details => "h-[40rem] lg:h-[75vh]"
         | _ => "h-96"
         }
       }
@@ -108,7 +108,7 @@ let make = () => {
 
     <DirectionMenuContext>
       // TODO: problem with 'grow' overflowing the page
-      <div id="content" className=`${activeContent} bg-radiola-light-grey lg:block lg:h-[20.5rem] grow`>
+      <div id="content" className=`${activeContent} lg:block lg:h-[20.5rem] grow bg-radiola-light-grey`>
         // TODO: create react element for each content type
         {
           switch dataState.selection {

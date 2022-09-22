@@ -93,8 +93,8 @@ let make = (
     | None => [React.null]
     }
   
-  <div>
-    <ul id="details-header" className="flex flex-row justify-evenly w-full h-7 overflow-hidden bg-gray-300">
+  <div className="h-full">
+    <ul id="details-header" className="flex flex-row justify-evenly w-full h-7 bg-gray-300">
       <div className="w-1/4">
         <li 
           className="flex flex-col justify-center h-full text-center text-radiola-light-grey cursor-pointer hover:bg-gray-600"
@@ -114,52 +114,56 @@ let make = (
       </div>
     </ul>
 
-    <div id="details-content" className="p-4">
-      <div className="truncate pb-2">
-        <b>{React.string("From: ")}</b>
-        {React.string(directionState.origin)}
-      </div>
-
-      <div className="truncate pb-2">
-        <b>{React.string("To: ")}</b>
-        {React.string(directionState.destination)}
-      </div>
-
-      <div className="flex flex-row justify-around pb-2">
-        <div>
-          <b>{React.string("Leave: ")}</b>
-          {
-            React.string(switch activeItinerary.startTime {
-              | Some(time) => Util.getReadableTime(~time=Belt.Int.toFloat(time))
-              | None => "N/A"
-              })
-          }
+    <div id="details-content" className="p-4 h-[calc(100%_-_1.75rem)] overflow-y-auto">
+      <div className="pb-2">
+        <div className="truncate pb-2">
+          <b>{React.string("From: ")}</b>
+          {React.string(directionState.origin)}
         </div>
 
-        <div>
-          <b>{React.string("Arrive: ")}</b>
-          {
-            React.string(switch activeItinerary.endTime {
-              | Some(time) => Util.getReadableTime(~time=Belt.Int.toFloat(time))
-              | None => "N/A"
-              })
-          }
+        <div className="truncate pb-2">
+          <b>{React.string("To: ")}</b>
+          {React.string(directionState.destination)}
         </div>
+
+        <div className="flex flex-row justify-around pb-2">
+          <div>
+            <b>{React.string("Leave: ")}</b>
+            {
+              React.string(switch activeItinerary.startTime {
+                | Some(time) => Util.getReadableTime(~time=Belt.Int.toFloat(time))
+                | None => "N/A"
+                })
+            }
+          </div>
+
+          <div>
+            <b>{React.string("Arrive: ")}</b>
+            {
+              React.string(switch activeItinerary.endTime {
+                | Some(time) => Util.getReadableTime(~time=Belt.Int.toFloat(time))
+                | None => "N/A"
+                })
+            }
+          </div>
+        </div>
+
+        <hr />
       </div>
 
-      <hr className="pb-2" />
+      <div>
+        <div className="pb-2 text-xl">
+          <b>{React.string("STEPS")}</b>
+        </div>
 
-      <div className="pb-2 text-xl">
-        <b>{React.string("STEPS")}</b>
-      </div>
-
-      // TODO: add class to "steps" div to allow scrolling
-      <div id="step-details">
-        // For each leg show: [mode] [distance] [duration]
-        {
-          React.array(legElements)
-        }
-        // IF leg has steps show: [relativeDirection] on to [streetName] [distance]
+        // TODO: add class to "steps" div to allow scrolling
+        <div id="step-details" className="overflow-y-auto">
+          // For each leg show: [mode] [distance] [duration]
+          {
+            React.array(legElements)
+          }
+          // IF leg has steps show: [relativeDirection] on to [streetName] [distance]
+        </div>
       </div>
     </div>
   </div>
