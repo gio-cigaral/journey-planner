@@ -87,7 +87,7 @@ let make = () => {
         ->Belt.Array.mapWithIndex((index, item) => {
           <div 
             key={"search-suggestion-" ++ Belt.Int.toString(index)} 
-            className="p-3 cursor-pointer bg-radiola-light-grey border-b-2 border-gray-300 truncate hover:bg-gray-300"
+            className="p-3 cursor-pointer bg-custom-light-grey border-b-2 border-gray-300 truncate hover:bg-gray-300"
             onClick={(_) => handleChosenSuggestion(item)}
           >
             {React.string(item.placeName)}
@@ -105,7 +105,7 @@ let make = () => {
 
   // TODO: remove "active" styling for text input box
   <div id="search-container" className="flex m-2 relative">
-    <form className="relative flex flex-row m-5 w-full h-14 rounded-lg bg-radiola-light-grey shadow-md" onSubmit={(evt) => ReactEvent.Form.preventDefault(evt)}>
+    <form className="relative flex flex-row m-5 w-full h-14 rounded-lg bg-custom-light-grey shadow-md" onSubmit={(evt) => ReactEvent.Form.preventDefault(evt)}>
       <div id="search-bar" className="w-full">
         <input 
           ref={ReactDOM.Ref.domRef(searchBarInputRef)}
@@ -133,7 +133,7 @@ let make = () => {
     </form>
 
     <div id="icon-container" className="absolute z-50 top-0 bottom-0 mt-auto mb-auto h-16" onClick={(_) => Util.emptyFocus(dataDispatch)}>
-      <img className="w-auto h-full" src="/img/DYNAMIS_ColourSignet.svg" alt="Radiola Dynamis Icon" />
+      <img className="w-auto h-full" src="" alt="" />
     </div>
   </div>
 }

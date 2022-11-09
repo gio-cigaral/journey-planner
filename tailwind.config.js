@@ -4,10 +4,10 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        "radiola-red": "#EC343A",
-        "radiola-purple": "#3F3981",
-        "radiola-blue": "#152E4D",
-        "radiola-light-grey": "#F9FBFD",
+        "custom-red": "#EC343A",
+        "custom-purple": "#3F3981",
+        "custom-blue": "#152E4D",
+        "custom-light-grey": "#F9FBFD",
       },
       fontFamily: {
         cerebri: ["Cerebri Sans", "sans-serif"],

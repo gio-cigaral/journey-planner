@@ -1,4 +1,4 @@
-# Radiola Journey Planner
+# Journey Planner
 
 ## Installation
 

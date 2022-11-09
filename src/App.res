@@ -8,8 +8,8 @@ let make = () => {
   let getStopData = () => Data.getStops(~parameters="", ~callback, ~errorHandler)
 
   React.useEffect0(() => {
-    getStopData()
-    Js.log("stops loaded")
+    // getStopData()
+    // Js.log("stops loaded")
     
     None
   })

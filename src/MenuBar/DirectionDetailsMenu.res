@@ -36,7 +36,7 @@ let make = (
     ->Belt.Array.mapWithIndex((index, _) => {
       <li
         key=`itinerary-button-${Belt.Int.toString(index)}`
-        className=`flex flex-col grow justify-center h-full text-center text-radiola-light-grey cursor-pointer ${activeItineraryButton(~index)} hover:bg-gray-600`
+        className=`flex flex-col grow justify-center h-full text-center text-custom-light-grey cursor-pointer ${activeItineraryButton(~index)} hover:bg-gray-600`
         onClick={_ => dataDispatch(DataContext.Action.SetActiveItinerary(index))}
       >
         {React.string(Belt.Int.toString(index))}
@@ -97,7 +97,7 @@ let make = (
     <ul id="details-header" className="flex flex-row justify-evenly w-full h-7 bg-gray-300">
       <div className="w-1/4">
         <li 
-          className="flex flex-col justify-center h-full text-center text-radiola-light-grey cursor-pointer hover:bg-gray-600"
+          className="flex flex-col justify-center h-full text-center text-custom-light-grey cursor-pointer hover:bg-gray-600"
           onClick={_ => {
             dataDispatch(DataContext.Action.SetPlan(None))
             dataDispatch(DataContext.Action.SetSelection(Directions(Input)))

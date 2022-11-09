@@ -9,7 +9,6 @@
     "server": "vite",
     "start": "rescript build -w"
   },
-  "repository": "git@bitbucket.org:RadiolaRTI/journey-planner.git",
   "keywords": [
     "rescript"
   ],

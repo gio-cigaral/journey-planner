@@ -187,7 +187,7 @@ let make = () => {
     }
 
   <div id="directions-container" className="h-full w-full p-5">
-    <form className="flex flex-col justify-evenly h-4/5 bg-radiola-light-grey">
+    <form className="flex flex-col justify-evenly h-4/5 bg-custom-light-grey">
       <div id="origin-input-bar" className="relative w-full h-12 border-2 border-gray-300 rounded-lg">
         <input 
           ref={ReactDOM.Ref.domRef(originBarRef)}

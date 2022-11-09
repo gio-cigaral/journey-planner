@@ -38,23 +38,23 @@ let make = () => {
       switch dataState.selection {
       | Tracker => {
           switch tab {
-          | Tracker => "text-radiola-light-grey"
-          | _ => "text-radiola-light-grey/25"
+          | Tracker => "text-custom-light-grey"
+          | _ => "text-custom-light-grey/25"
           }
         }
       | Directions(_) => {
           switch tab {
-          | Directions(_) => "text-radiola-light-grey"
-          | _ => "text-radiola-light-grey/25"
+          | Directions(_) => "text-custom-light-grey"
+          | _ => "text-custom-light-grey/25"
           }
         }
       | Routes => {
           switch tab {
-          | Routes => "text-radiola-light-grey"
-          | _ => "text-radiola-light-grey/25"
+          | Routes => "text-custom-light-grey"
+          | _ => "text-custom-light-grey/25"
           }
         }
-      | _ => "text-radiola-light-grey/25"
+      | _ => "text-custom-light-grey/25"
       }
     }
 
@@ -85,30 +85,30 @@ let make = () => {
   
   // TODO: adjust "footer" element height for large screens - starting height too low?
   <div id="footer" className=`flex flex-col ${activeFooter} lg:ml-7 lg:mr-7 shadow-md`>
-    <ul id="nav-bar" className="flex flex-row justify-evenly grow-0 w-full h-14 overflow-hidden rounded-t-xl bg-radiola-blue">
+    <ul id="nav-bar" className="flex flex-row justify-evenly grow-0 w-full h-14 overflow-hidden rounded-t-xl bg-custom-blue">
       // TODO: only show label for large screens
       <li className="relative flex flex-col justify-center flex-1 text-center cursor-pointer group" onClick={(_) => onClickTab(Tracker)}>
-        <i className=`fe fe-radio ${activeTabIcon(~tab=Tracker)} z-10 group-hover:text-radiola-light-grey text-[2.75rem]` />
-        <div className=`${activeTabHighlight(~tab=Tracker)} z-0 group-hover:block absolute bottom-0 left-0 h-3 w-full bg-gradient-to-t from-radiola-red to-radiola-blue`></div>
-        // <div className="text-radiola-light-grey/25 text-xs">{React.string("TRACKER")}</div>
+        <i className=`fe fe-radio ${activeTabIcon(~tab=Tracker)} z-10 group-hover:text-custom-light-grey text-[2.75rem]` />
+        <div className=`${activeTabHighlight(~tab=Tracker)} z-0 group-hover:block absolute bottom-0 left-0 h-3 w-full bg-gradient-to-t from-custom-red to-custom-blue`></div>
+        // <div className="text-custom-light-grey/25 text-xs">{React.string("TRACKER")}</div>
       </li>
 
       <li className="relative flex flex-col justify-center flex-1 text-center cursor-pointer group" onClick={(_) => onClickDirections()}>
-        <i className=`fe fe-map-pin ${activeTabIcon(~tab=Directions(Input))} z-10 group-hover:text-radiola-light-grey text-[2.5rem]` />
-        <div className=`${activeTabHighlight(~tab=Directions(Input))} z-0 group-hover:block absolute bottom-0 left-0 h-3 w-full bg-gradient-to-t from-radiola-red to-radiola-blue`></div>
-        // <div className="text-radiola-light-grey/25">{React.string("DIRECTIONS")}</div>
+        <i className=`fe fe-map-pin ${activeTabIcon(~tab=Directions(Input))} z-10 group-hover:text-custom-light-grey text-[2.5rem]` />
+        <div className=`${activeTabHighlight(~tab=Directions(Input))} z-0 group-hover:block absolute bottom-0 left-0 h-3 w-full bg-gradient-to-t from-custom-red to-custom-blue`></div>
+        // <div className="text-custom-light-grey/25">{React.string("DIRECTIONS")}</div>
       </li>
 
       <li className="relative flex flex-col justify-center flex-1 text-center cursor-pointer group" onClick={(_) => onClickTab(Routes)}>
-        <i className=`fe fe-bookmark ${activeTabIcon(~tab=Routes)} z-10 group-hover:text-radiola-light-grey text-[2.75rem]` />
-        <div className=`${activeTabHighlight(~tab=Routes)} z-0 group-hover:block absolute bottom-0 left-0 h-3 w-full bg-gradient-to-t from-radiola-red to-radiola-blue`></div>
-        // <div className="text-radiola-light-grey/25">{React.string("ROUTES")}</div>
+        <i className=`fe fe-bookmark ${activeTabIcon(~tab=Routes)} z-10 group-hover:text-custom-light-grey text-[2.75rem]` />
+        <div className=`${activeTabHighlight(~tab=Routes)} z-0 group-hover:block absolute bottom-0 left-0 h-3 w-full bg-gradient-to-t from-custom-red to-custom-blue`></div>
+        // <div className="text-custom-light-grey/25">{React.string("ROUTES")}</div>
       </li>
     </ul>
 
     <DirectionMenuContext>
       // TODO: problem with 'grow' overflowing the page
-      <div id="content" className=`${activeContent} lg:block lg:h-[20.5rem] grow bg-radiola-light-grey`>
+      <div id="content" className=`${activeContent} lg:block lg:h-[20.5rem] grow bg-custom-light-grey`>
         // TODO: create react element for each content type
         {
           switch dataState.selection {
